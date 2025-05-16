@@ -69,6 +69,7 @@
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
       box-sizing: border-box;
+      text-align: center;
     }
 
     .topic-section {
@@ -162,7 +163,7 @@
         display: none;
       }
       select {
-        display: none !important; /* جلوگیری از نمایش خودکار select */
+        display: none !important;
       }
       .info-row {
         display: flex;
@@ -196,8 +197,14 @@
 
     <form id="meetingForm">
       <div class="info-row">
-        <input type="text" id="meetingDate" readonly placeholder="📅 تاریخ جلسه">
-        <input type="text" id="meetingTime" readonly placeholder="⏰ ساعت جلسه">
+        <div style="display: flex; align-items: center; gap: 5px; flex: 1;">
+          <input type="text" id="meetingDate" placeholder="📅 تاریخ جلسه">
+          <button type="button" onclick="resetDate()" title="بازنشانی تاریخ" style="background: none; border: none; cursor: pointer;">🔄</button>
+        </div>
+        <div style="display: flex; align-items: center; gap: 5px; flex: 1;">
+          <input type="text" id="meetingTime" placeholder="⏰ ساعت جلسه">
+          <button type="button" onclick="resetTime()" title="بازنشانی ساعت" style="background: none; border: none; cursor: pointer;">🔄</button>
+        </div>
         <input type="text" id="meetingNumber" placeholder="🔢 شماره جلسه" required>
         <select id="meetingLocation">
           <option value="">📍 مکان جلسه</option>
@@ -253,16 +260,23 @@
   </div>
 
   <script>
-    function setCurrentDateTime() {
+    function resetDate() {
       const now = new Date();
-      const optionsDate = { year: 'numeric', month: '2-digit', day: '2-digit' };
-      const optionsTime = { hour: '2-digit', minute: '2-digit', hour12: false };
-
-      const formattedDate = now.toLocaleDateString('fa-IR', optionsDate).replace(/\//g, '-');
-      const formattedTime = now.toLocaleTimeString('fa-IR', optionsTime);
-
+      const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+      const formattedDate = now.toLocaleDateString('fa-IR', options).replace(/\//g, '-');
       document.getElementById("meetingDate").value = formattedDate;
+    }
+
+    function resetTime() {
+      const now = new Date();
+      const options = { hour: '2-digit', minute: '2-digit', hour12: false };
+      const formattedTime = now.toLocaleTimeString('fa-IR', options);
       document.getElementById("meetingTime").value = formattedTime;
+    }
+
+    function setCurrentDateTime() {
+      resetDate();
+      resetTime();
     }
 
     function addEntry() {
@@ -325,7 +339,7 @@
 
     window.onload = function () {
       setCurrentDateTime();
-      updatePrintLocation(); // به‌روزرسانی مقدار مکان جلسه برای چاپ
+      updatePrintLocation();
     };
   </script>
 </body>
