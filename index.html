@@ -156,7 +156,7 @@
 <body>
   <div class="container">
     <div class="logo-section">
-      <img src="logo.png" alt="لوگوی شرکت برکت" onerror="this.style.display='none'">
+      <img src="https://raw.githubusercontent.com/USERNAME/REPO/main/logo.png" alt="لوگوی شرکت">
     </div>
 
     <div class="header-section">
@@ -202,5 +202,26 @@
       </div>
     </div>
   </div>
+
+  <script>
+    document.getElementById('meetingDate').value = new Date().toLocaleDateString('fa-IR');
+
+    function addEntry() {
+      var entryDiv = document.createElement("div");
+      entryDiv.classList.add("entry-row");
+      entryDiv.innerHTML = `
+        <textarea oninput="adjustHeight(this)" placeholder="📌 مصوبه جدید"></textarea>
+        <div class="entry-details">
+          <input type="text" placeholder="👤 مسئول اجرا">
+          <input type="text" class="shamsi-date" placeholder="📅 مهلت اجرا">
+        </div>
+        <div class="entry-controls">
+          <button class="delete-btn" onclick="deleteEntry(this)">🗑 حذف</button>
+        </div>
+      `;
+      document.getElementById("entries").appendChild(entryDiv);
+    }
+  </script>
+
 </body>
 </html>
