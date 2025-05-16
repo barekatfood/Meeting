@@ -53,10 +53,11 @@
 
     .info-bar, .topic-section {
       width: 100%;
-      padding: 10px;
+      padding: 8px; /* تنظیم padding برای هماهنگی با سایر ورودی‌ها */
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
       margin-bottom: 15px;
+      box-sizing: border-box; /* برای تضمین اینکه padding در اندازه کل لحاظ شود */
     }
 
     .attendees-section {
@@ -136,49 +137,67 @@
       <h2>صورتجلسه شرکت بهین تهیه غذای برکت</h2>
     </div>
 
-    <input type="text" id="meetingDate" readonly placeholder="📅 تاریخ جلسه">
-    <input type="text" id="meetingTime" readonly placeholder="⏰ ساعت جلسه">
-    <input type="text" id="meetingNumber" placeholder="🔢 شماره جلسه">
-    <input type="text" id="topic" class="topic-section" placeholder="🔹 موضوع جلسه">
+    <form id="meetingForm">
+      <input type="text" id="meetingDate" readonly placeholder="📅 تاریخ جلسه">
+      <input type="text" id="meetingTime" readonly placeholder="⏰ ساعت جلسه">
+      <input type="text" id="meetingNumber" placeholder="🔢 شماره جلسه" required>
+      <input type="text" id="topic" class="topic-section" placeholder="🔹 موضوع جلسه" required>
 
-    <div class="attendees-section">
-      <select id="attendeesList" class="attendees-list" multiple>
-        <option value="محمد جواد اسماعیلی">محمد جواد اسماعیلی</option>
-        <option value="علیرضا اسماعیلی">علیرضا اسماعیلی</option>
-        <option value="علیرضا کیایی">علیرضا کیایی</option>
-        <option value="علی سلیمی">علی سلیمی</option>
-        <option value="کاظم کاظمی">کاظم کاظمی</option>
-        <option value="رضا خانی">رضا خانی</option>
-        <option value="آقای اخباریه">آقای اخباریه</option>
-        <option value="محمدرضا صالحی">محمدرضا صالحی</option>
-        <option value="محمد صباغی">محمد صباغی</option>
-      </select>
-      <input type="text" id="newAttendee" class="attendees-input" placeholder="➕ افزودن نام جدید">
-      <button class="primary-btn" onclick="addAttendee()">افزودن</button>
-    </div>
+      <div class="attendees-section">
+        <select id="attendeesList" class="attendees-list" multiple>
+          <option value="محمد جواد اسماعیلی">محمد جواد اسماعیلی</option>
+          <option value="علیرضا اسماعیلی">علیرضا اسماعیلی</option>
+          <option value="علیرضا کیایی">علیرضا کیایی</option>
+          <option value="علی سلیمی">علی سلیمی</option>
+          <option value="کاظم کاظمی">کاظم کاظمی</option>
+          <option value="رضا خانی">رضا خانی</option>
+          <option value="آقای اخباریه">آقای اخباریه</option>
+          <option value="محمدرضا صالحی">محمدرضا صالحی</option>
+          <option value="محمد صباغی">محمد صباغی</option>
+        </select>
+        <input type="text" id="newAttendee" class="attendees-input" placeholder="➕ افزودن نام جدید">
+        <button type="button" class="primary-btn" onclick="addAttendee()">افزودن</button>
+      </div>
 
-    <div id="selectedAttendees">
-      <h3>حاضرین در جلسه: <span id="selectedAttendeeList" style="font-size: 12px;"></span></h3> <!-- نام‌ها در کنار عنوان -->
-    </div>
+      <div id="selectedAttendees">
+        <h3>حاضرین در جلسه: <span id="selectedAttendeeList" style="font-size: 12px;"></span></h3> <!-- نام‌ها در کنار عنوان -->
+      </div>
 
-    <div id="entries">
-      <div class="entry-row">
-        <textarea placeholder="📌 مصوبه"></textarea>
-        <div class="entry-details">
-          <input type="text" placeholder="👤 مسئول اجرا">
-          <input type="text" class="shamsi-date" placeholder="📅 مهلت اجرا">
+      <div id="entries">
+        <div class="entry-row">
+          <textarea placeholder="📌 مصوبه"></textarea>
+          <div class="entry-details">
+            <input type="text" placeholder="👤 مسئول اجرا">
+            <input type="text" class="shamsi-date" placeholder="📅 مهلت اجرا">
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="action-buttons">
-      <button class="primary-btn" onclick="addEntry()">+ افزودن مصوبه جدید</button>
-      <button class="primary-btn" onclick="window.print()">🖨️ پرینت</button>
-      <button class="primary-btn" onclick="sharePage()">📤 اشتراک‌گذاری</button>
-    </div>
+      <div class="action-buttons">
+        <button type="button" class="primary-btn" onclick="addEntry()">+ افزودن مصوبه جدید</button>
+        <button type="button" class="primary-btn" onclick="window.print()">🖨️ پرینت</button>
+        <button type="button" class="primary-btn" onclick="sharePage()">📤 اشتراک‌گذاری</button>
+      </div>
+    </form>
   </div>
 
   <script>
+    // تابع برای تنظیم تاریخ و ساعت جاری
+    function setCurrentDateTime() {
+      const now = new Date();
+      const optionsDate = { year: 'numeric', month: '2-digit', day: '2-digit' };
+      const optionsTime = { hour: '2-digit', minute: '2-digit', hour12: false }; // ساعت 24 ساعته
+
+      // تنظیم تاریخ در فرمت dd/mm/yyyy
+      const formattedDate = now.toLocaleDateString('fa-IR', optionsDate).replace(/\//g, '-');
+      // تنظیم ساعت
+      const formattedTime = now.toLocaleTimeString('fa-IR', optionsTime);
+
+      document.getElementById("meetingDate").value = formattedDate;
+      document.getElementById("meetingTime").value = formattedTime;
+    }
+
+    // تابع برای افزودن مصوبه جدید
     function addEntry() {
       var entryDiv = document.createElement("div");
       entryDiv.classList.add("entry-row");
@@ -192,6 +211,7 @@
       document.getElementById("entries").appendChild(entryDiv);
     }
 
+    // تابع برای افزودن نام جدید
     function addAttendee() {
       var newName = document.getElementById("newAttendee").value.trim();
       if (newName) {
@@ -199,12 +219,13 @@
         option.text = newName;
         document.getElementById("attendeesList").add(option);
         document.getElementById("newAttendee").value = "";
+        updateSelectedAttendees();
       }
-      updateSelectedAttendees();
     }
 
     document.getElementById("attendeesList").addEventListener("change", updateSelectedAttendees);
 
+    // تابع برای به‌روزرسانی نام‌های حاضرین
     function updateSelectedAttendees() {
       var selectedList = document.getElementById("attendeesList");
       var selectedAttendees = document.getElementById("selectedAttendeeList");
@@ -219,6 +240,16 @@
       // به‌روزرسانی لیست نام‌ها با ویرگول
       selectedAttendees.textContent = names.join(', '); 
     }
+    
+    // تابع برای اشتراک‌گذاری
+    function sharePage() {
+      alert('این صفحه به اشتراک گذاشته شد!');
+    }
+
+    // اجرای تابع در زمان بارگذاری صفحه
+    window.onload = function() {
+      setCurrentDateTime();
+    };
   </script>
 </body>
 </html>
