@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <title>صورتجلسه شرکت بهین تهیه غذای برکت</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400&display=swap" rel="stylesheet">
 
   <style>
@@ -17,7 +15,7 @@
       --border-radius: 12px;
       --font-size: 14px;
     }
-
+    
     body {
       font-family: var(--font-family);
       font-size: var(--font-size);
@@ -53,18 +51,9 @@
       font-weight: bold;
     }
 
-    .info-bar {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 15px;
-    }
-
-    .topic-section {
+    .info-bar, .topic-section {
       width: 100%;
-      padding: 12px;
-      font-size: var(--font-size);
+      padding: 10px;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
       margin-bottom: 15px;
@@ -72,17 +61,21 @@
 
     .attendees-section {
       display: flex;
-      align-items: center;
       gap: 10px;
       margin-bottom: 15px;
     }
 
     .attendees-list {
       flex: 1;
+      border: 2px solid var(--primary-color);
+      border-radius: var(--border-radius);
     }
 
-    .attendees-input {
+    .attendees-input, .primary-btn {
       flex: 2;
+      padding: 8px;
+      border: 2px solid var(--primary-color);
+      border-radius: var(--border-radius);
     }
 
     .entry-row {
@@ -90,7 +83,6 @@
       flex-direction: column;
       gap: 10px;
       margin-bottom: 15px;
-      width: 100%;
     }
 
     .entry-details {
@@ -98,18 +90,11 @@
       gap: 10px;
     }
 
-    .signature-section {
-      margin-top: 20px;
-      padding-top: 15px;
-      border-top: 2px solid var(--primary-color);
-      text-align: center;
-    }
-
-    .signature-box {
-      display: flex;
-      justify-content: center;
-      gap: 50px;
-      width: 100%;
+    .entry-details input {
+      flex: 1;
+      padding: 8px;
+      border: 2px solid var(--primary-color);
+      border-radius: var(--border-radius);
     }
 
     .action-buttons {
@@ -122,9 +107,7 @@
     .primary-btn {
       background: var(--primary-color);
       color: white;
-      padding: 8px;
-      border: none;
-      border-radius: 20px;
+      border-radius: var(--border-radius);
       cursor: pointer;
     }
 
@@ -145,18 +128,22 @@
       <h2>صورتجلسه شرکت بهین تهیه غذای برکت</h2>
     </div>
 
-    <div class="info-bar">
-      <input type="text" id="meetingDate" readonly placeholder="📅 تاریخ جلسه">
-      <input type="text" id="meetingTime" readonly placeholder="⏰ ساعت جلسه">
-      <input type="text" id="meetingNumber" placeholder="🔢 شماره جلسه">
-    </div>
-
+    <input type="text" id="meetingDate" readonly placeholder="📅 تاریخ جلسه">
+    <input type="text" id="meetingTime" readonly placeholder="⏰ ساعت جلسه">
+    <input type="text" id="meetingNumber" placeholder="🔢 شماره جلسه">
     <input type="text" id="topic" class="topic-section" placeholder="🔹 موضوع جلسه">
 
     <div class="attendees-section">
       <select id="attendeesList" class="attendees-list" multiple>
         <option value="محمد جواد اسماعیلی">محمد جواد اسماعیلی</option>
         <option value="علیرضا اسماعیلی">علیرضا اسماعیلی</option>
+        <option value="علیرضا کیایی">علیرضا کیایی</option>
+        <option value="علی سلیمی">علی سلیمی</option>
+        <option value="کاظم کاظمی">کاظم کاظمی</option>
+        <option value="رضا خانی">رضا خانی</option>
+        <option value="آقای اخباریه">آقای اخباریه</option>
+        <option value="محمدرضا صالحی">محمدرضا صالحی</option>
+        <option value="محمد صباغی">محمد صباغی</option>
       </select>
       <input type="text" id="newAttendee" class="attendees-input" placeholder="➕ افزودن نام جدید">
       <button class="primary-btn" onclick="addAttendee()">افزودن</button>
@@ -164,7 +151,7 @@
 
     <div id="entries">
       <div class="entry-row">
-        <textarea placeholder="📌 مصوبه 1"></textarea>
+        <textarea placeholder="📌 مصوبه"></textarea>
         <div class="entry-details">
           <input type="text" placeholder="👤 مسئول اجرا">
           <input type="text" class="shamsi-date" placeholder="📅 مهلت اجرا">
@@ -203,6 +190,5 @@
       }
     }
   </script>
-
 </body>
 </html>
