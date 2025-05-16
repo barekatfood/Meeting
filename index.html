@@ -10,7 +10,7 @@
 
   <style>
     :root {
-      --primary-color: #800000; /* زرشکی */
+      --primary-color: #800000;
       --font-family: 'Vazirmatn', sans-serif;
       --background-color: #fff0f0;
       --text-color: #2d004d;
@@ -149,9 +149,9 @@
     .primary-btn {
       background: var(--primary-color);
       color: white;
-      padding: 12px;
+      padding: 8px; /* اندازه کوچک‌تر */
       border: none;
-      border-radius: 25px;
+      border-radius: 20px;
       cursor: pointer;
     }
 
@@ -181,7 +181,7 @@
     <input type="text" id="topic" class="topic-section" placeholder="🔹 موضوع جلسه">
 
     <div class="attendees-section">
-      <select id="attendeesList" class="attendees-list">
+      <select id="attendeesList" class="attendees-list" multiple>
         <option value="محمد جواد اسماعیلی">محمد جواد اسماعیلی</option>
         <option value="علیرضا اسماعیلی">علیرضا اسماعیلی</option>
       </select>
@@ -200,33 +200,12 @@
     </div>
 
     <div class="action-buttons">
-      <button class="primary-btn" onclick="addEntry()">+ افزودن بند جدید</button>
-      <button class="primary-btn" onclick="window.print()">🖨️ پرینت صورتجلسه</button>
+      <button class="primary-btn" onclick="window.print()">🖨️ پرینت</button>
       <button class="primary-btn" onclick="sharePage()">📤 اشتراک‌گذاری</button>
     </div>
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      document.getElementById('meetingDate').value = new Date().toLocaleDateString('fa-IR');
-
-      function updateMeetingTime() {
-        var now = new Date();
-        var hours = now.getHours().toString().padStart(2, '0');
-        var minutes = now.getMinutes().toString().padStart(2, '0');
-        document.getElementById('meetingTime').value = `⏰ ${hours}:${minutes}`;
-      }
-      updateMeetingTime();
-      setInterval(updateMeetingTime, 60000);
-    });
-
-    function addEntry() {
-      var entryDiv = document.createElement("div");
-      entryDiv.classList.add("entry-row");
-      entryDiv.innerHTML = `<textarea placeholder="📌 مصوبه جدید"></textarea>`;
-      document.getElementById("entries").appendChild(entryDiv);
-    }
-
     function addAttendee() {
       var newName = document.getElementById("newAttendee").value.trim();
       if (newName) {
