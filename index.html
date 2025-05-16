@@ -79,6 +79,21 @@
       margin-bottom: 15px;
     }
 
+    .attendees-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .attendees-list {
+      flex: 1;
+    }
+
+    .attendees-input {
+      flex: 2;
+    }
+
     .entry-row {
       display: flex;
       flex-direction: column;
@@ -95,6 +110,11 @@
       border-radius: var(--border-radius);
       resize: vertical;
       overflow-y: hidden;
+    }
+
+    .entry-details {
+      display: flex;
+      gap: 10px;
     }
 
     .signature-section {
@@ -160,30 +180,29 @@
 
     <input type="text" id="topic" class="topic-section" placeholder="🔹 موضوع جلسه">
 
-    <select id="fontSelector">
-      <option value="'Vazirmatn', sans-serif">Vazirmatn</option>
-      <option value="'Arial', sans-serif">Arial</option>
-      <option value="'Tahoma', sans-serif">Tahoma</option>
-      <option value="'Courier New', monospace">Courier</option>
-    </select>
-
-    <select id="fontSizeSelector">
-      <option value="12px">12px</option>
-      <option value="14px">14px</option>
-      <option value="16px">16px</option>
-      <option value="18px">18px</option>
-    </select>
-
-    <textarea id="agenda" class="full-width" placeholder="📝 دستور جلسه"></textarea>
+    <div class="attendees-section">
+      <select id="attendeesList" class="attendees-list">
+        <option value="محمد جواد اسماعیلی">محمد جواد اسماعیلی</option>
+        <option value="علیرضا اسماعیلی">علیرضا اسماعیلی</option>
+      </select>
+      <input type="text" id="newAttendee" class="attendees-input" placeholder="➕ افزودن نام جدید">
+      <button class="primary-btn" onclick="addAttendee()">افزودن</button>
+    </div>
 
     <div id="entries">
       <div class="entry-row">
-        <textarea oninput="adjustHeight(this)" placeholder="📌 مصوبه 1"></textarea>
-        <div class="entry-controls">
-          <button class="primary-btn" onclick="addEntry()">+ افزودن بند جدید</button>
-          <button class="primary-btn" onclick="window.print()">🖨️ پرینت صورتجلسه</button>
+        <textarea placeholder="📌 مصوبه 1"></textarea>
+        <div class="entry-details">
+          <input type="text" placeholder="👤 مسئول اجرا">
+          <input type="text" class="shamsi-date" placeholder="📅 مهلت اجرا">
         </div>
       </div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="primary-btn" onclick="addEntry()">+ افزودن بند جدید</button>
+      <button class="primary-btn" onclick="window.print()">🖨️ پرینت صورتجلسه</button>
+      <button class="primary-btn" onclick="sharePage()">📤 اشتراک‌گذاری</button>
     </div>
   </div>
 
@@ -201,20 +220,27 @@
       setInterval(updateMeetingTime, 60000);
     });
 
-    document.getElementById("fontSelector").addEventListener("change", function() {
-      document.body.style.fontFamily = this.value;
-    });
-
-    document.getElementById("fontSizeSelector").addEventListener("change", function() {
-      document.body.style.fontSize = this.value;
-    });
-
     function addEntry() {
       var entryDiv = document.createElement("div");
       entryDiv.classList.add("entry-row");
       entryDiv.innerHTML = `<textarea placeholder="📌 مصوبه جدید"></textarea>`;
       document.getElementById("entries").appendChild(entryDiv);
     }
+
+    function addAttendee() {
+      var newName = document.getElementById("newAttendee").value.trim();
+      if (newName) {
+        var option = document.createElement("option");
+        option.text = newName;
+        document.getElementById("attendeesList").add(option);
+        document.getElementById("newAttendee").value = "";
+      }
+    }
+
+    function sharePage() {
+      alert("این قابلیت به اشتراک‌گذاری صفحه متصل نیست ولی می‌توان یک لینک ایجاد کرد.");
+    }
   </script>
+
 </body>
 </html>
