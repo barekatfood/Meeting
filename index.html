@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>صورتجلسه شرکت بهین تهیه غذای برکت</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn :wght@400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -13,7 +13,7 @@
       --background-color: #fff0f0;
       --text-color: #2d004d;
       --border-radius: 12px;
-      --font-size: 14px;
+      --font-size: 14px; /* اندازه فونت اصلی */
     }
 
     body {
@@ -74,15 +74,13 @@
 
     .topic-section {
       width: calc(100% - 20px); /* کمی کوچک‌تر */
-      margin-right: 10px; /* فاصله از چپ */
-      padding: 5px;
+      margin: 10px 0; /* فاصله از بالا و پایین */
+      padding: 10px;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
-      margin-bottom: 15px;
-      text-align: center;
-      resize: none;
-      background-color: #f0f8e0;
-      font-size: 13px;
+      text-align: center; /* متن در وسط */
+      height: 40px; /* ارتفاع ثابت */
+      font-size: 14px; /* اندازه متن */
     }
 
     .attendees-section {
@@ -151,7 +149,8 @@
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
       padding: 10px;
-      font-size: 12px;
+      font-size: 10px; /* تنظیم سایز فونت کوچکتر */
+      line-height: 1.2; /* تنظیم فاصله بین خطوط */
     }
 
     .print-only {
@@ -188,7 +187,7 @@
 <body>
   <div class="container">
     <div class="logo-section">
-      <img src="https://i.imgur.com/gX2NTo6.png " alt="لوگوی شرکت برکت">
+      <img src="https://i.imgur.com/gX2NTo6.png" alt="لوگوی شرکت برکت">
     </div>
 
     <div class="header-section">
@@ -237,7 +236,7 @@
       </div>
 
       <div id="selectedAttendees">
-        <h3>حاضرین در جلسه: <span id="selectedAttendeeList" style="font-size: 12px;"></span></h3>
+        <h3>حاضرین در جلسه: <span id="selectedAttendeeList" style="font-size: 10px; line-height: 1.2;"></span></h3>
       </div>
 
       <div id="entries">
@@ -291,6 +290,7 @@
         </div>
       `;
       document.getElementById("entries").appendChild(entryDiv);
+      autoResizeTextarea(entryDiv.querySelector('textarea')); // تنظیم ارتفاع خودکار
     }
 
     function removeEntry(button) {
@@ -336,6 +336,18 @@
     function sharePage() {
       alert('این صفحه به اشتراک گذاشته شد!');
     }
+
+    function autoResizeTextarea(textarea) {
+      textarea.style.height = 'auto'; // ارتفاع را به طور موقت به خودکار تنظیم می‌کنیم
+      textarea.style.height = textarea.scrollHeight + 'px'; // ارتفاع را بر اساس محتوا تنظیم می‌کنیم
+    }
+
+    // این تابع به تمام textarea ها اضافه می‌شود
+    document.querySelectorAll('textarea').forEach(function(textarea) {
+      textarea.addEventListener('input', function() {
+        autoResizeTextarea(textarea); // هر بار که کاربر چیزی تایپ می‌کند، تابع را فراخوانی می‌کنیم
+      });
+    });
 
     window.onload = function () {
       setCurrentDateTime();
