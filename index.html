@@ -4,18 +4,18 @@
   <meta charset="UTF-8">
   <title>صورتجلسه شرکت بهین تهیه غذای برکت</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn :wght@400&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --primary-color: #800000;
+      --primary-color: #8BC34A; /* رنگ سبز کله‌غازی */
       --font-family: 'Vazirmatn', sans-serif;
       --background-color: #fff0f0;
       --text-color: #2d004d;
       --border-radius: 12px;
-      --font-size: 14px; /* اندازه پیش فرض فونت */
+      --font-size: 14px;
     }
-    
+
     body {
       font-family: var(--font-family);
       font-size: var(--font-size);
@@ -51,13 +51,37 @@
       font-weight: bold;
     }
 
-    .info-bar, .topic-section {
-      width: 100%;
-      padding: 8px; /* تنظیم padding برای هماهنگی با سایر ورودی‌ها */
+    .info-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      border: 2px solid var(--primary-color);
+      border-radius: var(--border-radius);
+      padding: 10px;
+      background-color: #f0f8e0;
+      flex-wrap: wrap;
+    }
+
+    .info-row input,
+    .info-row select {
+      flex: 1;
+      padding: 8px;
+      border: 2px solid var(--primary-color);
+      border-radius: var(--border-radius);
+      box-sizing: border-box;
+    }
+
+    .topic-section {
+      width: calc(100% - 20px); /* کمی کوچک‌تر */
+      margin-right: 10px; /* فاصله از چپ */
+      padding: 5px;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
       margin-bottom: 15px;
-      box-sizing: border-box; /* برای تضمین اینکه padding در اندازه کل لحاظ شود */
+      text-align: center;
+      resize: none;
+      background-color: #f0f8e0;
+      font-size: 13px;
     }
 
     .attendees-section {
@@ -112,17 +136,50 @@
       cursor: pointer;
     }
 
+    .remove-btn {
+      background: red;
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      padding: 5px 10px;
+    }
+
     #selectedAttendees {
       margin-top: 20px;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
       padding: 10px;
-      font-size: 12px; /* سایز فونت برای نام‌ها */
+      font-size: 12px;
+    }
+
+    .print-only {
+      display: none;
     }
 
     @media print {
-      .primary-btn, .attendees-input, #attendeesList {
-        display: none; /* پنهان کردن دکمه‌ها و لیست انتخاب در حالت چاپ */
+      .primary-btn, .attendees-input, #attendeesList, .remove-btn {
+        display: none;
+      }
+      select {
+        display: none !important; /* جلوگیری از نمایش خودکار select */
+      }
+      .info-row {
+        display: flex;
+        align-items: center;
+      }
+      .print-only {
+        display: block;
+      }
+      .info-print {
+        border: 2px solid var(--primary-color);
+        border-radius: var(--border-radius);
+        padding: 8px;
+        margin: 0;
+        text-align: center;
+        background-color: #f0f8e0;
+        flex: 1;
+        font-size: 13px;
       }
     }
   </style>
@@ -130,7 +187,7 @@
 <body>
   <div class="container">
     <div class="logo-section">
-      <img src="https://i.imgur.com/gX2NTo6.png" alt="لوگوی شرکت برکت"> <!-- لینک جدید لوگو -->
+      <img src="https://i.imgur.com/gX2NTo6.png " alt="لوگوی شرکت برکت">
     </div>
 
     <div class="header-section">
@@ -138,10 +195,23 @@
     </div>
 
     <form id="meetingForm">
-      <input type="text" id="meetingDate" readonly placeholder="📅 تاریخ جلسه">
-      <input type="text" id="meetingTime" readonly placeholder="⏰ ساعت جلسه">
-      <input type="text" id="meetingNumber" placeholder="🔢 شماره جلسه" required>
-      <input type="text" id="topic" class="topic-section" placeholder="🔹 موضوع جلسه" required>
+      <div class="info-row">
+        <input type="text" id="meetingDate" readonly placeholder="📅 تاریخ جلسه">
+        <input type="text" id="meetingTime" readonly placeholder="⏰ ساعت جلسه">
+        <input type="text" id="meetingNumber" placeholder="🔢 شماره جلسه" required>
+        <select id="meetingLocation">
+          <option value="">📍 مکان جلسه</option>
+          <option value="دفتر باغ فیض">دفتر باغ فیض</option>
+          <option value="دفتر مرکزی">دفتر مرکزی</option>
+          <option value="شعبه مسجد">شعبه مسجد</option>
+          <option value="شعبه لبخند">شعبه لبخند</option>
+          <option value="شعبه الزهرا سلام الله علیها">شعبه الزهرا سلام الله علیها</option>
+          <option value="سرای لبخند">سرای لبخند</option>
+        </select>
+        <div class="print-only info-print" id="printMeetingLocationField"></div>
+      </div>
+
+      <textarea id="topic" class="topic-section" placeholder="🔹 موضوع جلسه" required></textarea>
 
       <div class="attendees-section">
         <select id="attendeesList" class="attendees-list" multiple>
@@ -169,6 +239,7 @@
           <div class="entry-details">
             <input type="text" placeholder="👤 مسئول اجرا">
             <input type="text" class="shamsi-date" placeholder="📅 مهلت اجرا">
+            <button type="button" class="remove-btn" onclick="removeEntry(this)">حذف</button>
           </div>
         </div>
       </div>
@@ -202,9 +273,15 @@
         <div class="entry-details">
           <input type="text" placeholder="👤 مسئول اجرا">
           <input type="text" class="shamsi-date" placeholder="📅 مهلت اجرا">
+          <button type="button" class="remove-btn" onclick="removeEntry(this)">حذف</button>
         </div>
       `;
       document.getElementById("entries").appendChild(entryDiv);
+    }
+
+    function removeEntry(button) {
+      var entryRow = button.closest('.entry-row');
+      entryRow.remove();
     }
 
     function addAttendee() {
@@ -230,16 +307,25 @@
           names.push(selectedList.options[i].value);
         }
       }
-      
-      selectedAttendees.textContent = names.join(', '); 
+
+      selectedAttendees.textContent = names.join(', ');
     }
-    
+
+    function updatePrintLocation() {
+      const location = document.getElementById("meetingLocation").value;
+      const printLocationDiv = document.getElementById("printMeetingLocationField");
+      printLocationDiv.textContent = "📍 مکان جلسه: " + location;
+    }
+
+    document.getElementById("meetingLocation").addEventListener("change", updatePrintLocation);
+
     function sharePage() {
       alert('این صفحه به اشتراک گذاشته شد!');
     }
 
-    window.onload = function() {
+    window.onload = function () {
       setCurrentDateTime();
+      updatePrintLocation(); // به‌روزرسانی مقدار مکان جلسه برای چاپ
     };
   </script>
 </body>
