@@ -15,7 +15,7 @@
       --background-color: #fff0f0;
       --text-color: #2d004d;
       --border-radius: 12px;
-      --font-size: 16px;
+      --font-size: 14px;
     }
 
     body {
@@ -55,18 +55,10 @@
 
     .info-bar {
       display: flex;
-      flex-wrap: wrap;
       gap: 10px;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       margin-bottom: 15px;
-    }
-
-    select, input {
-      flex: 1;
-      padding: 8px;
-      border: 2px solid var(--primary-color);
-      border-radius: var(--border-radius);
     }
 
     .full-width {
@@ -76,6 +68,15 @@
       border-radius: var(--border-radius);
       resize: none;
       height: 40px;
+    }
+
+    .topic-section {
+      width: 100%;
+      padding: 12px;
+      font-size: var(--font-size);
+      border: 2px solid var(--primary-color);
+      border-radius: var(--border-radius);
+      margin-bottom: 15px;
     }
 
     .entry-row {
@@ -96,12 +97,6 @@
       overflow-y: hidden;
     }
 
-    .entry-controls {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 5px;
-    }
-
     .signature-section {
       margin-top: 20px;
       padding-top: 15px;
@@ -114,11 +109,6 @@
       justify-content: center;
       gap: 50px;
       width: 100%;
-    }
-
-    .signature-box div {
-      text-align: center;
-      width: 40%;
     }
 
     .signature-box input {
@@ -145,13 +135,10 @@
       cursor: pointer;
     }
 
-    .delete-btn {
-      background: #b30000;
-      color: white;
+    select {
       padding: 8px;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
+      border: 2px solid var(--primary-color);
+      border-radius: var(--border-radius);
     }
   </style>
 </head>
@@ -169,41 +156,34 @@
       <input type="text" id="meetingDate" readonly placeholder="📅 تاریخ جلسه">
       <input type="text" id="meetingTime" readonly placeholder="⏰ ساعت جلسه">
       <input type="text" id="meetingNumber" placeholder="🔢 شماره جلسه">
-
-      <select id="fontSelector">
-        <option value="'Vazirmatn', sans-serif">Vazirmatn</option>
-        <option value="'Arial', sans-serif">Arial</option>
-        <option value="'Tahoma', sans-serif">Tahoma</option>
-        <option value="'Courier New', monospace">Courier</option>
-      </select>
-
-      <select id="fontSizeSelector">
-        <option value="14px">14px</option>
-        <option value="16px">16px</option>
-        <option value="18px">18px</option>
-        <option value="20px">20px</option>
-      </select>
     </div>
 
-    <textarea id="attendees" class="full-width" placeholder="👥 اعضای حاضر"></textarea>
+    <input type="text" id="topic" class="topic-section" placeholder="🔹 موضوع جلسه">
+
+    <select id="fontSelector">
+      <option value="'Vazirmatn', sans-serif">Vazirmatn</option>
+      <option value="'Arial', sans-serif">Arial</option>
+      <option value="'Tahoma', sans-serif">Tahoma</option>
+      <option value="'Courier New', monospace">Courier</option>
+    </select>
+
+    <select id="fontSizeSelector">
+      <option value="12px">12px</option>
+      <option value="14px">14px</option>
+      <option value="16px">16px</option>
+      <option value="18px">18px</option>
+    </select>
+
     <textarea id="agenda" class="full-width" placeholder="📝 دستور جلسه"></textarea>
 
     <div id="entries">
       <div class="entry-row">
         <textarea oninput="adjustHeight(this)" placeholder="📌 مصوبه 1"></textarea>
-        <div class="entry-details">
-          <input type="text" placeholder="👤 مسئول اجرا">
-          <input type="text" class="shamsi-date" placeholder="📅 مهلت اجرا">
-        </div>
         <div class="entry-controls">
-          <button class="delete-btn" onclick="deleteEntry(this)">🗑 حذف</button>
+          <button class="primary-btn" onclick="addEntry()">+ افزودن بند جدید</button>
+          <button class="primary-btn" onclick="window.print()">🖨️ پرینت صورتجلسه</button>
         </div>
       </div>
-    </div>
-
-    <div class="action-buttons">
-      <button class="primary-btn" onclick="addEntry()">+ افزودن بند جدید</button>
-      <button class="primary-btn" onclick="window.print()">🖨️ پرینت صورتجلسه</button>
     </div>
   </div>
 
@@ -234,12 +214,6 @@
       entryDiv.classList.add("entry-row");
       entryDiv.innerHTML = `<textarea placeholder="📌 مصوبه جدید"></textarea>`;
       document.getElementById("entries").appendChild(entryDiv);
-    }
-
-    function deleteEntry(button) {
-      if (button.closest(".entry-row")) {
-        button.closest(".entry-row").remove();
-      }
     }
   </script>
 </body>
