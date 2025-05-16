@@ -130,7 +130,7 @@
 <body>
   <div class="container">
     <div class="logo-section">
-      <img src="Meeting/logo.png" alt="لوگوی شرکت">
+      <img src="https://i.imgur.com/gX2NTo6.png" alt="لوگوی شرکت برکت"> <!-- لینک جدید لوگو -->
     </div>
 
     <div class="header-section">
@@ -160,7 +160,7 @@
       </div>
 
       <div id="selectedAttendees">
-        <h3>حاضرین در جلسه: <span id="selectedAttendeeList" style="font-size: 12px;"></span></h3> <!-- نام‌ها در کنار عنوان -->
+        <h3>حاضرین در جلسه: <span id="selectedAttendeeList" style="font-size: 12px;"></span></h3>
       </div>
 
       <div id="entries">
@@ -182,22 +182,18 @@
   </div>
 
   <script>
-    // تابع برای تنظیم تاریخ و ساعت جاری
     function setCurrentDateTime() {
       const now = new Date();
       const optionsDate = { year: 'numeric', month: '2-digit', day: '2-digit' };
-      const optionsTime = { hour: '2-digit', minute: '2-digit', hour12: false }; // ساعت 24 ساعته
+      const optionsTime = { hour: '2-digit', minute: '2-digit', hour12: false };
 
-      // تنظیم تاریخ در فرمت dd/mm/yyyy
       const formattedDate = now.toLocaleDateString('fa-IR', optionsDate).replace(/\//g, '-');
-      // تنظیم ساعت
       const formattedTime = now.toLocaleTimeString('fa-IR', optionsTime);
 
       document.getElementById("meetingDate").value = formattedDate;
       document.getElementById("meetingTime").value = formattedTime;
     }
 
-    // تابع برای افزودن مصوبه جدید
     function addEntry() {
       var entryDiv = document.createElement("div");
       entryDiv.classList.add("entry-row");
@@ -211,7 +207,6 @@
       document.getElementById("entries").appendChild(entryDiv);
     }
 
-    // تابع برای افزودن نام جدید
     function addAttendee() {
       var newName = document.getElementById("newAttendee").value.trim();
       if (newName) {
@@ -225,28 +220,24 @@
 
     document.getElementById("attendeesList").addEventListener("change", updateSelectedAttendees);
 
-    // تابع برای به‌روزرسانی نام‌های حاضرین
     function updateSelectedAttendees() {
       var selectedList = document.getElementById("attendeesList");
       var selectedAttendees = document.getElementById("selectedAttendeeList");
-      var names = []; // آرایه‌ای برای نگه‌داشتن نام‌ها
+      var names = [];
 
       for (var i = 0; i < selectedList.options.length; i++) {
         if (selectedList.options[i].selected) {
-          names.push(selectedList.options[i].value); // اضافه کردن نام به آرایه
+          names.push(selectedList.options[i].value);
         }
       }
       
-      // به‌روزرسانی لیست نام‌ها با ویرگول
       selectedAttendees.textContent = names.join(', '); 
     }
     
-    // تابع برای اشتراک‌گذاری
     function sharePage() {
       alert('این صفحه به اشتراک گذاشته شد!');
     }
 
-    // اجرای تابع در زمان بارگذاری صفحه
     window.onload = function() {
       setCurrentDateTime();
     };
