@@ -13,7 +13,7 @@
       --background-color: #fff0f0;
       --text-color: #2d004d;
       --border-radius: 12px;
-      --font-size: 14px;
+      --font-size: 14px; /* اندازه پیش فرض فونت */
     }
     
     body {
@@ -111,9 +111,17 @@
       cursor: pointer;
     }
 
+    #selectedAttendees {
+      margin-top: 20px;
+      border: 2px solid var(--primary-color);
+      border-radius: var(--border-radius);
+      padding: 10px;
+      font-size: 12px; /* سایز فونت برای نام‌ها */
+    }
+
     @media print {
-      .primary-btn, .attendees-input {
-        display: none;
+      .primary-btn, .attendees-input, #attendeesList {
+        display: none; /* پنهان کردن دکمه‌ها و لیست انتخاب در حالت چاپ */
       }
     }
   </style>
@@ -147,6 +155,10 @@
       </select>
       <input type="text" id="newAttendee" class="attendees-input" placeholder="➕ افزودن نام جدید">
       <button class="primary-btn" onclick="addAttendee()">افزودن</button>
+    </div>
+
+    <div id="selectedAttendees">
+      <h3>حاضرین در جلسه: <span id="selectedAttendeeList" style="font-size: 12px;"></span></h3> <!-- نام‌ها در کنار عنوان -->
     </div>
 
     <div id="entries">
@@ -188,6 +200,24 @@
         document.getElementById("attendeesList").add(option);
         document.getElementById("newAttendee").value = "";
       }
+      updateSelectedAttendees();
+    }
+
+    document.getElementById("attendeesList").addEventListener("change", updateSelectedAttendees);
+
+    function updateSelectedAttendees() {
+      var selectedList = document.getElementById("attendeesList");
+      var selectedAttendees = document.getElementById("selectedAttendeeList");
+      var names = []; // آرایه‌ای برای نگه‌داشتن نام‌ها
+
+      for (var i = 0; i < selectedList.options.length; i++) {
+        if (selectedList.options[i].selected) {
+          names.push(selectedList.options[i].value); // اضافه کردن نام به آرایه
+        }
+      }
+      
+      // به‌روزرسانی لیست نام‌ها با ویرگول
+      selectedAttendees.textContent = names.join(', '); 
     }
   </script>
 </body>
