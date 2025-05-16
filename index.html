@@ -4,11 +4,10 @@
   <meta charset="UTF-8">
   <title>صورتجلسه شرکت بهین تهیه غذای برکت</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- اگر از date picker فارسی استفاده می‌کنید -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
   <script src="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400&display=swap" rel="stylesheet">
-  
+
   <style>
     :root {
       --primary-color: #800000;
@@ -18,6 +17,7 @@
       --border-radius: 12px;
       --font-size: 14px;
     }
+
     body {
       font-family: var(--font-family);
       font-size: var(--font-size);
@@ -26,42 +26,41 @@
       margin: 0;
       padding: 20px;
     }
+
     .container {
       max-width: 850px;
       margin: auto;
       background: white;
       border-radius: var(--border-radius);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       padding: 30px;
       border: 4px double var(--primary-color);
     }
+
     .logo-section {
       text-align: center;
       margin-bottom: 10px;
     }
+
     .logo-section img {
       max-width: 150px;
       height: auto;
     }
+
     .header-section {
       text-align: center;
       margin-bottom: 15px;
       font-weight: bold;
     }
+
     .info-bar {
       display: flex;
-      flex-wrap: wrap;
       gap: 10px;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 15px;
     }
-    .info-bar input {
-      flex: 1;
-      padding: 10px;
-      border: 2px solid var(--primary-color);
-      border-radius: var(--border-radius);
-    }
+
     .topic-section {
       width: 100%;
       padding: 12px;
@@ -70,94 +69,90 @@
       border-radius: var(--border-radius);
       margin-bottom: 15px;
     }
+
     .attendees-section {
       display: flex;
       align-items: center;
       gap: 10px;
       margin-bottom: 15px;
     }
+
     .attendees-list {
       flex: 1;
-      padding: 10px;
-      border: 2px solid var(--primary-color);
-      border-radius: var(--border-radius);
     }
+
     .attendees-input {
       flex: 2;
-      padding: 10px;
-      border: 2px solid var(--primary-color);
-      border-radius: var(--border-radius);
     }
+
     .entry-row {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
       margin-bottom: 15px;
-    }
-    .entry-row textarea {
       width: 100%;
-      height: 40px;
-      padding: 10px;
-      border: 2px solid var(--primary-color);
-      border-radius: var(--border-radius);
-      resize: vertical;
-      margin-bottom: 10px;
     }
+
     .entry-details {
       display: flex;
       gap: 10px;
     }
-    .entry-details input {
-      flex: 1;
-      padding: 10px;
-      border: 2px solid var(--primary-color);
-      border-radius: var(--border-radius);
+
+    .signature-section {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 2px solid var(--primary-color);
+      text-align: center;
     }
+
+    .signature-box {
+      display: flex;
+      justify-content: center;
+      gap: 50px;
+      width: 100%;
+    }
+
     .action-buttons {
       display: flex;
       gap: 10px;
       justify-content: center;
       margin-top: 20px;
-      flex-wrap: wrap;
     }
+
     .primary-btn {
       background: var(--primary-color);
       color: white;
-      padding: 8px; /* اندازه کوچکتر برای دکمه "افزودن نام جدید" و سایر دکمه‌ها */
+      padding: 8px;
       border: none;
       border-radius: 20px;
       cursor: pointer;
     }
-    .font-settings {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 20px;
-      flex-wrap: wrap;
-    }
-    .font-settings select {
-      padding: 8px;
-      border: 2px solid var(--primary-color);
-      border-radius: var(--border-radius);
+
+    @media print {
+      .primary-btn, .attendees-input {
+        display: none;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- بخش لوگو -->
     <div class="logo-section">
       <img src="Meeting/logo.png" alt="لوگوی شرکت">
     </div>
-    <!-- بخش عنوان -->
+
     <div class="header-section">
       <h2>صورتجلسه شرکت بهین تهیه غذای برکت</h2>
     </div>
-    <!-- نوار اطلاعات: تاریخ، ساعت و شماره جلسه -->
+
     <div class="info-bar">
       <input type="text" id="meetingDate" readonly placeholder="📅 تاریخ جلسه">
       <input type="text" id="meetingTime" readonly placeholder="⏰ ساعت جلسه">
       <input type="text" id="meetingNumber" placeholder="🔢 شماره جلسه">
     </div>
-    <!-- کادر موضوع جلسه -->
+
     <input type="text" id="topic" class="topic-section" placeholder="🔹 موضوع جلسه">
-    <!-- بخش حضور: لیست اعضا با امکان افزودن نام -->
+
     <div class="attendees-section">
       <select id="attendeesList" class="attendees-list" multiple>
         <option value="محمد جواد اسماعیلی">محمد جواد اسماعیلی</option>
@@ -166,7 +161,7 @@
       <input type="text" id="newAttendee" class="attendees-input" placeholder="➕ افزودن نام جدید">
       <button class="primary-btn" onclick="addAttendee()">افزودن</button>
     </div>
-    <!-- بخش مصوبات -->
+
     <div id="entries">
       <div class="entry-row">
         <textarea placeholder="📌 مصوبه 1"></textarea>
@@ -176,43 +171,28 @@
         </div>
       </div>
     </div>
-    <!-- دکمه‌های عملیات -->
+
     <div class="action-buttons">
-      <button class="primary-btn" onclick="addEntry()">+ افزودن بند جدید</button>
+      <button class="primary-btn" onclick="addEntry()">+ افزودن مصوبه جدید</button>
       <button class="primary-btn" onclick="window.print()">🖨️ پرینت</button>
       <button class="primary-btn" onclick="sharePage()">📤 اشتراک‌گذاری</button>
     </div>
-    <!-- تنظیمات فونت و اندازه متن در پایین صفحه -->
-    <div class="font-settings">
-      <select id="fontSelector">
-        <option value="'Vazirmatn', sans-serif">Vazirmatn</option>
-        <option value="'Arial', sans-serif">Arial</option>
-        <option value="'Tahoma', sans-serif">Tahoma</option>
-        <option value="'Courier New', monospace">Courier</option>
-      </select>
-      <select id="fontSizeSelector">
-        <option value="12px">12px</option>
-        <option value="14px" selected>14px</option>
-        <option value="16px">16px</option>
-      </select>
-    </div>
   </div>
-  
+
   <script>
-    // به روزرسانی تاریخ و زمان جلسه
-    document.addEventListener("DOMContentLoaded", function() {
-      document.getElementById('meetingDate').value = new Date().toLocaleDateString('fa-IR');
-      function updateMeetingTime() {
-        var now = new Date();
-        var hours = now.getHours().toString().padStart(2, '0');
-        var minutes = now.getMinutes().toString().padStart(2, '0');
-        document.getElementById('meetingTime').value = `⏰ ${hours}:${minutes}`;
-      }
-      updateMeetingTime();
-      setInterval(updateMeetingTime, 60000);
-    });
-    
-    // افزودن نام جدید به لیست اعضای حاضر
+    function addEntry() {
+      var entryDiv = document.createElement("div");
+      entryDiv.classList.add("entry-row");
+      entryDiv.innerHTML = `
+        <textarea placeholder="📌 مصوبه جدید"></textarea>
+        <div class="entry-details">
+          <input type="text" placeholder="👤 مسئول اجرا">
+          <input type="text" class="shamsi-date" placeholder="📅 مهلت اجرا">
+        </div>
+      `;
+      document.getElementById("entries").appendChild(entryDiv);
+    }
+
     function addAttendee() {
       var newName = document.getElementById("newAttendee").value.trim();
       if (newName) {
@@ -222,37 +202,7 @@
         document.getElementById("newAttendee").value = "";
       }
     }
-    
-    // افزودن بند جدید مصوبه به همراه فیلدهای مسئول اجرا و مهلت اجرا
-    function addEntry() {
-      var entries = document.getElementById("entries");
-      var entryCount = entries.getElementsByClassName("entry-row").length + 1;
-      var entryDiv = document.createElement("div");
-      entryDiv.classList.add("entry-row");
-      entryDiv.innerHTML = `
-        <textarea placeholder="📌 مصوبه ${entryCount}"></textarea>
-        <div class="entry-details">
-          <input type="text" placeholder="👤 مسئول اجرا">
-          <input type="text" class="shamsi-date" placeholder="📅 مهلت اجرا">
-        </div>
-      `;
-      entries.appendChild(entryDiv);
-    }
-    
-    // عملکرد دکمه اشتراک‌گذاری (نمایش پیام)
-    function sharePage() {
-      alert("این قابلیت به اشتراک‌گذاری صفحه متصل نیست، اما می‌توان یک لینک تولید کرد.");
-    }
-    
-    // تنظیم فونت
-    document.getElementById("fontSelector").addEventListener("change", function() {
-      document.body.style.fontFamily = this.value;
-    });
-    
-    // تنظیم اندازه فونت
-    document.getElementById("fontSizeSelector").addEventListener("change", function() {
-      document.body.style.fontSize = this.value;
-    });
   </script>
+
 </body>
 </html>
