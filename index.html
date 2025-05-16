@@ -156,7 +156,7 @@
 <body>
   <div class="container">
     <div class="logo-section">
-      <img src="https://raw.githubusercontent.com/USERNAME/REPO/main/logo.png" alt="لوگوی شرکت">
+      <img src="https://USERNAME.github.io/REPO/logo.png" alt="لوگوی شرکت">
     </div>
 
     <div class="header-section">
@@ -204,7 +204,18 @@
   </div>
 
   <script>
-    document.getElementById('meetingDate').value = new Date().toLocaleDateString('fa-IR');
+    function updateMeetingTime() {
+      var now = new Date();
+      var hours = now.getHours().toString().padStart(2, '0');
+      var minutes = now.getMinutes().toString().padStart(2, '0');
+      document.getElementById('meetingTime').value = `⏰ ${hours}:${minutes}`;
+    }
+
+    window.onload = function() {
+      document.getElementById('meetingDate').value = new Date().toLocaleDateString('fa-IR');
+      updateMeetingTime();
+      setInterval(updateMeetingTime, 60000); // به‌روزرسانی هر دقیقه
+    };
 
     function addEntry() {
       var entryDiv = document.createElement("div");
@@ -220,6 +231,13 @@
         </div>
       `;
       document.getElementById("entries").appendChild(entryDiv);
+    }
+
+    function deleteEntry(button) {
+      var entryDiv = button.closest(".entry-row"); 
+      if (entryDiv) {
+        entryDiv.remove();
+      }
     }
   </script>
 
