@@ -170,6 +170,7 @@
       border-radius: var(--border-radius);
       font-size: var(--font-size);
       line-height: 1.2;
+      min-width: 100px;
     }
 
     .action-buttons {
@@ -216,12 +217,47 @@
       background-color: rgba(255, 107, 155, 0.1);
     }
 
+    #archive {
+      margin-top: 20px;
+      padding: 10px;
+      border: 2px solid var(--primary-color);
+      border-radius: var(--border-radius);
+      background-color: rgba(123, 63, 228, 0.1);
+    }
+
+    #archive table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    #archive th, #archive td {
+      border: 1px solid var(--primary-color);
+      padding: 8px;
+      text-align: center;
+      font-size: var(--font-size);
+    }
+
+    #archive button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: var(--font-size);
+      margin: 0 2px;
+    }
+
+    #archive button:hover {
+      background: var(--accent-color);
+    }
+
     .print-only {
       display: none;
     }
 
     @media print {
-      .primary-btn, .attendees-input, #attendeesList, .remove-btn {
+      .primary-btn, .attendees-input, #attendeesList, .remove-btn, #archive {
         display: none;
       }
       select {
@@ -326,14 +362,20 @@
       </div>
 
       <div class="action-buttons">
+        <button type="button" class="primary-btn" id="saveMeetingBtn" onclick="saveMeeting()">💾 ذخیره صورت‌جلسه</button>
+        <button type="button" class="primary-btn" id="updateMeetingBtn" onclick="updateMeeting()" style="display: none;">💾 ذخیره تغییرات</button>
         <button type="button" class="primary-btn" onclick="addEntry()">+ افزودن مصوبه جدید</button>
         <button type="button" class="primary-btn" onclick="window.print()">🖨️ پرینت</button>
         <button type="button" class="primary-btn" onclick="sharePage()">📤 اشتراک‌گذاری</button>
       </div>
     </form>
+
+    <div id="archive"></div>
   </div>
 
   <script>
+    let editingMeetingId = null;
+
     function resetDate() {
       try {
         const now = new Date();
@@ -365,112 +407,201 @@
       }
     }
 
-    function addEntry() {
+    function saveMeeting() {
       try {
-        console.log('addEntry called');
-        var entryDiv = document.createElement("div");
-        entryDiv.classList.add("entry-row");
-        entryDiv.innerHTML = `
-          <textarea placeholder="📌 مصوبه جدید"></textarea>
+        const meeting = {
+          id: Date.now(),
+          date: document.getElementById("meetingDate").value,
+          time: document.getElementById("meetingTime").value,
+          number: document.getElementById("meetingNumber").value,
+          location: document.getElementById("meetingLocation").value,
+          topic: document.getElementById("topic").value,
+          attendees: Array.from(document.getElementById("attendeesList").selectedOptions).map(opt => opt.value),
+          entries: Array.from(document.querySelectorAll(".entry-row")).map(row => ({
+            text: row.querySelector("textarea").value,
+            responsible: row.querySelector(".entry-details input:nth-child(1)").value,
+            deadline: row.querySelector(".entry-details input:nth-child(2)").value
+          }))
+        };
+        let meetings = JSON.parse(localStorage.getItem("meetings") || "[]");
+        meetings.push(meeting);
+        localStorage.setItem("meetings", JSON.stringify(meetings));
+        alert("صورت‌جلسه ذخیره شد!");
+        resetForm();
+        displayArchive();
+      } catch (e) {
+        console.error('Error in saveMeeting:', e);
+      }
+    }
+
+    function editMeeting(id) {
+      try {
+        const meetings = JSON.parse(localStorage.getItem("meetings") || "[]");
+        const meeting = meetings.find(m => m.id === id);
+        editingMeetingId = id;
+
+        // پر کردن فرم
+        document.getElementById("meetingDate").value = meeting.date;
+        document.getElementById("meetingTime").value = meeting.time;
+        document.getElementById("meetingNumber").value = meeting.number;
+        document.getElementById("meetingLocation").value = meeting.location;
+        document.getElementById("topic").value = meeting.topic;
+
+        // انتخاب حاضرین
+        const attendeesList = document.getElementById("attendeesList");
+        Array.from(attendeesList.options).forEach(option => {
+          option.selected = meeting.attendees.includes(option.value);
+        });
+        updateSelectedAttendees();
+
+        // افزودن مصوبات
+        const entriesDiv = document.getElementById("entries");
+        entriesDiv.innerHTML = "";
+        meeting.entries.forEach(entry => {
+          const entryDiv = document.createElement("div");
+          entryDiv.classList.add("entry-row");
+          entryDiv.innerHTML = `
+            <textarea placeholder="📌 مصوبه">${entry.text}</textarea>
+            <div class="entry-details">
+              <input type="text" placeholder="👤 مسئول اجرا" value="${entry.responsible}">
+              <input type="text" class="shamsi-date" placeholder="📅 مهلت اجرا" value="${entry.deadline}">
+              <button type="button" class="remove-btn" onclick="removeEntry(this)">حذف</button>
+            </div>
+          `;
+          entriesDiv.appendChild(entryDiv);
+          autoResizeTextarea(entryDiv.querySelector('textarea'));
+        });
+
+        // تغییر دکمه‌ها
+        document.getElementById("saveMeetingBtn").style.display = "none";
+        document.getElementById("updateMeetingBtn").style.display = "inline-block";
+      } catch (e) {
+        console.error('Error in editMeeting:', e);
+      }
+    }
+
+    function updateMeeting() {
+      try {
+        if (editingMeetingId === null) return;
+        const meetings = JSON.parse(localStorage.getItem("meetings") || "[]");
+        const updatedMeeting = {
+          id: editingMeetingId,
+          date: document.getElementById("meetingDate").value,
+          time: document.getElementById("meetingTime").value,
+          number: document.getElementById("meetingNumber").value,
+          location: document.getElementById("meetingLocation").value,
+          topic: document.getElementById("topic").value,
+          attendees: Array.from(document.getElementById("attendeesList").selectedOptions).map(opt => opt.value),
+          entries: Array.from(document.querySelectorAll(".entry-row")).map(row => ({
+            text: row.querySelector("textarea").value,
+            responsible: row.querySelector(".entry-details input:nth-child(1)").value,
+            deadline: row.querySelector(".entry-details input:nth-child(2)").value
+          }))
+        };
+        const updatedMeetings = meetings.map(m => m.id === editingMeetingId ? updatedMeeting : m);
+        localStorage.setItem("meetings", JSON.stringify(updatedMeetings));
+        alert("صورت‌جلسه به‌روزرسانی شد!");
+        resetForm();
+        displayArchive();
+      } catch (e) {
+        console.error('Error in updateMeeting:', e);
+      }
+    }
+
+    function resetForm() {
+      document.getElementById("meetingForm").reset();
+      document.getElementById("entries").innerHTML = `
+        <div class="entry-row">
+          <textarea placeholder="📌 مصوبه"></textarea>
           <div class="entry-details">
             <input type="text" placeholder="👤 مسئول اجرا">
             <input type="text" class="shamsi-date" placeholder="📅 مهلت اجرا">
             <button type="button" class="remove-btn" onclick="removeEntry(this)">حذف</button>
           </div>
+        </div>
+      `;
+      document.getElementById("selectedAttendeeList").textContent = "";
+      document.getElementById("saveMeetingBtn").style.display = "inline-block";
+      document.getElementById("updateMeetingBtn").style.display = "none";
+      editingMeetingId = null;
+      setCurrentDateTime();
+    }
+
+    function displayArchive() {
+      try {
+        const meetings = JSON.parse(localStorage.getItem("meetings") || "[]");
+        const archiveDiv = document.getElementById("archive");
+        archiveDiv.innerHTML = `
+          <h3>آرشیو صورت‌جلسات</h3>
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr style="background: #00C4B4; color: white;">
+              <th>تاریخ</th>
+              <th>شماره جلسه</th>
+              <th>موضوع</th>
+              <th>عملیات</th>
+            </tr>
+            ${meetings.sort((a, b) => a.id - b.id).map(meeting => `
+              <tr>
+                <td>${meeting.date}</td>
+                <td>${meeting.number}</td>
+                <td>${meeting.topic}</td>
+                <td>
+                  <button onclick="viewMeeting(${meeting.id})">مشاهده</button>
+                  <button onclick="editMeeting(${meeting.id})">ویرایش</button>
+                  <button onclick="downloadMeeting(${meeting.id})">دانلود TXT</button>
+                </td>
+              </tr>
+            `).join("")}
+          </table>
         `;
-        document.getElementById("entries").appendChild(entryDiv);
-        autoResizeTextarea(entryDiv.querySelector('textarea'));
       } catch (e) {
-        console.error('Error in addEntry:', e);
+        console.error('Error in displayArchive:', e);
       }
     }
 
-    function removeEntry(button) {
+    function viewMeeting(id) {
       try {
-        var entryRow = button.closest('.entry-row');
-        entryRow.remove();
+        const meetings = JSON.parse(localStorage.getItem("meetings") || "[]");
+        const meeting = meetings.find(m => m.id === id);
+        alert(`
+          صورت‌جلسه شرکت بهین تهیه غذای برکت
+          تاریخ: ${meeting.date}
+          ساعت: ${meeting.time}
+          شماره جلسه: ${meeting.number}
+          مکان: ${meeting.location}
+          موضوع: ${meeting.topic}
+          حاضرین: ${meeting.attendees.join(", ")}
+          مصوبات:
+          ${meeting.entries.map((e, i) => `${i + 1}. مصوبه: ${e.text}, مسئول: ${e.responsible}, مهلت: ${e.deadline}`).join("\n")}
+        `);
       } catch (e) {
-        console.error('Error in removeEntry:', e);
+        console.error('Error in viewMeeting:', e);
       }
     }
 
-    function addAttendee() {
+    function downloadMeeting(id) {
       try {
-        var newName = document.getElementById("newAttendee").value.trim();
-        if (newName) {
-          var option = document.createElement("option");
-          option.text = newName;
-          option.value = newName;
-          document.getElementById("attendeesList").add(option);
-          document.getElementById("newAttendee").value = "";
-          updateSelectedAttendees();
-        }
+        const meetings = JSON.parse(localStorage.getItem("meetings") || "[]");
+        const meeting = meetings.find(m => m.id === id);
+        const data = `
+          صورت‌جلسه شرکت بهین تهیه غذای برکت
+          تاریخ: ${meeting.date}
+          ساعت: ${meeting.time}
+          شماره جلسه: ${meeting.number}
+          مکان: ${meeting.location}
+          موضوع: ${meeting.topic}
+          حاضرین: ${meeting.attendees.join(", ")}
+          مصوبات:
+          ${meeting.entries.map((e, i) => `${i + 1}. مصوبه: ${e.text}, مسئول: ${e.responsible}, مهلت: ${e.deadline}`).join("\n")}
+        `;
+        const blob = new Blob([data], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `Meeting_${meeting.number}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
       } catch (e) {
-        console.error('Error in addAttendee:', e);
+        console.error('Error in downloadMeeting:', e);
       }
     }
-
-    document.getElementById("attendeesList").addEventListener("change", updateSelectedAttendees);
-
-    function updateSelectedAttendees() {
-      try {
-        console.log('updateSelectedAttendees called');
-        var selectedList = document.getElementById("attendeesList");
-        var selectedAttendees = document.getElementById("selectedAttendeeList");
-        var names = [];
-        for (var i = 0; i < selectedList.options.length; i++) {
-          if (selectedList.options[i].selected) {
-            names.push(selectedList.options[i].value);
-          }
-        }
-        selectedAttendees.textContent = names.join(', ');
-      } catch (e) {
-        console.error('Error in updateSelectedAttendees:', e);
-      }
-    }
-
-    function updatePrintLocation() {
-      try {
-        const location = document.getElementById("meetingLocation").value;
-        const printLocationDiv = document.getElementById("printMeetingLocationField");
-        printLocationDiv.textContent = location || "";
-      } catch (e) {
-        console.error('Error in updatePrintLocation:', e);
-      }
-    }
-
-    function sharePage() {
-      try {
-        alert('این صفحه به اشتراک گذاشته شد!');
-      } catch (e) {
-        console.error('Error in sharePage:', e);
-      }
-    }
-
-    function autoResizeTextarea(textarea) {
-      try {
-        textarea.style.height = 'auto';
-        textarea.style.height = textarea.scrollHeight + 'px';
-      } catch (e) {
-        console.error('Error in autoResizeTextarea:', e);
-      }
-    }
-
-    document.querySelectorAll('textarea').forEach(function(textarea) {
-      textarea.addEventListener('input', function() {
-        autoResizeTextarea(textarea);
-      });
-    });
-
-    window.onload = function () {
-      try {
-        setCurrentDateTime();
-        updatePrintLocation();
-        document.getElementById("meetingLocation").addEventListener("change", updatePrintLocation);
-      } catch (e) {
-        console.error('Error in window.onload:', e);
-      }
-    };
-  </script>
-</body>
-</html>
