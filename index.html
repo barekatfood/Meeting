@@ -11,11 +11,11 @@
       --primary-color: #00C4B4; /* آبی فیروزه‌ای (Canva) */
       --secondary-color: #7B3FE4; /* بنفش (Canva) */
       --accent-color: #FF6B9B; /* صورتی (Canva) */
-      --font-family: 'Vazirmatn', sans-serif;
+      --font-family: 'Vazirmatn', Tahoma, Arial, sans-serif;
       --background-color: #F5F6F5; /* خاکستری خیلی روشن */
       --text-color: #1F2A44; /* خاکستری تیره */
       --border-radius: 12px;
-      --font-size: 12px; /* فونت اصلی 12px */
+      --font-size: 10px; /* فونت اصلی 10px */
     }
 
     * {
@@ -25,25 +25,28 @@
     body {
       font-family: var(--font-family);
       font-size: var(--font-size);
+      font-weight: 400;
       background: var(--background-color);
       color: var(--text-color);
       margin: 0;
-      padding: 20px;
+      padding: 15px;
+      line-height: 1.2;
     }
 
     .container {
       max-width: 850px;
+      min-width: 600px;
       margin: auto;
       background: white;
       border-radius: var(--border-radius);
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      padding: 30px;
+      padding: 25px;
       border: 4px double var(--primary-color);
     }
 
     .logo-section {
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .logo-section img {
@@ -53,57 +56,64 @@
 
     .header-section {
       text-align: center;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
       font-weight: bold;
     }
 
     .info-row {
       display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
+      gap: 8px;
+      margin-bottom: 12px;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
-      padding: 10px;
-      background-color: rgba(123, 63, 228, 0.1); /* بنفش با شفافیت */
+      padding: 8px;
+      background-color: rgba(123, 63, 228, 0.1);
       flex-wrap: wrap;
     }
 
     .info-row input,
     .info-row select {
       flex: 1;
-      padding: 8px;
+      padding: 6px;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
       font-size: var(--font-size);
       text-align: center;
+      line-height: 1.2;
     }
 
     .topic-section {
       width: 100%;
-      margin: 10px 0;
-      padding: 10px;
+      margin: 8px 0;
+      padding: 8px;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
       text-align: center;
       height: 60px;
       font-size: var(--font-size);
       resize: vertical;
+      -webkit-resize: vertical;
+      -moz-resize: vertical;
+      line-height: 1.2;
     }
 
     .entry-row textarea {
       width: 100%;
-      padding: 10px;
+      padding: 8px;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
       min-height: 80px;
       font-size: var(--font-size);
       resize: vertical;
+      -webkit-resize: vertical;
+      -moz-resize: vertical;
+      line-height: 1.2;
     }
 
     .attendees-section {
       display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
+      gap: 8px;
+      margin-bottom: 12px;
     }
 
     .attendees-list {
@@ -111,42 +121,46 @@
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
       font-size: var(--font-size);
-      padding: 8px;
+      padding: 6px;
+      line-height: 1.2;
     }
 
     .attendees-input, .primary-btn {
       flex: 2;
-      padding: 8px;
+      padding: 6px;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
       font-size: var(--font-size);
+      line-height: 1.2;
     }
 
     .entry-row {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      margin-bottom: 15px;
+      gap: 8px;
+      margin-bottom: 12px;
     }
 
     .entry-details {
       display: flex;
-      gap: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .entry-details input {
       flex: 1;
-      padding: 8px;
+      padding: 6px;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
       font-size: var(--font-size);
+      line-height: 1.2;
     }
 
     .action-buttons {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       justify-content: center;
-      margin-top: 20px;
+      margin-top: 15px;
     }
 
     .primary-btn {
@@ -155,33 +169,35 @@
       border: none;
       border-radius: var(--border-radius);
       cursor: pointer;
-      padding: 8px 16px;
+      padding: 6px 12px;
       font-size: var(--font-size);
       transition: background-color 0.3s;
+      line-height: 1.2;
     }
 
     .primary-btn:hover {
-      background: var(--accent-color); /* صورتی در hover */
+      background: var(--accent-color);
     }
 
     .remove-btn {
-      background: var(--secondary-color); /* بنفش */
+      background: var(--secondary-color);
       color: white;
       border: none;
       border-radius: var(--border-radius);
       cursor: pointer;
-      padding: 5px 10px;
+      padding: 4px 8px;
       font-size: var(--font-size);
+      line-height: 1.2;
     }
 
     #selectedAttendees {
-      margin-top: 20px;
+      margin-top: 15px;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
-      padding: 10px;
-      font-size: 10px; /* فونت 10px برای نام اعضای جلسه */
+      padding: 8px;
+      font-size: var(--font-size);
       line-height: 1.2;
-      background-color: rgba(255, 107, 155, 0.1); /* صورتی با شفافیت */
+      background-color: rgba(255, 107, 155, 0.1);
     }
 
     .print-only {
@@ -205,19 +221,21 @@
       .info-print {
         border: 2px solid var(--primary-color);
         border-radius: var(--border-radius);
-        padding: 8px;
+        padding: 6px;
         margin: 0;
         text-align: center;
         background-color: rgba(123, 63, 228, 0.1);
         flex: 1;
-        font-size: var(--font-size); /* 12px */
+        font-size: var(--font-size);
+        line-height: 1.2;
       }
       .topic-section, .entry-row textarea {
         font-size: var(--font-size);
         min-height: 60px;
+        line-height: 1.2;
       }
       #selectedAttendees {
-        font-size: 10px;
+        font-size: var(--font-size);
         line-height: 1.2;
         background-color: rgba(255, 107, 155, 0.1);
       }
@@ -300,17 +318,25 @@
 
   <script>
     function resetDate() {
-      const now = new Date();
-      const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-      const formattedDate = now.toLocaleDateString('fa-IR', options).replace(/\//g, '-');
-      document.getElementById("meetingDate").value = formattedDate;
+      try {
+        const now = new Date();
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        const formattedDate = now.toLocaleDateString('fa-IR', options).replace(/\//g, '-');
+        document.getElementById("meetingDate").value = formattedDate;
+      } catch (e) {
+        console.error('Error in resetDate:', e);
+      }
     }
 
     function resetTime() {
-      const now = new Date();
-      const options = { hour: '2-digit', minute: '2-digit', hour12: false };
-      const formattedTime = now.toLocaleTimeString('fa-IR', options);
-      document.getElementById("meetingTime").value = formattedTime;
+      try {
+        const now = new Date();
+        const options = { hour: '2-digit', minute: '2-digit', hour12: false };
+        const formattedTime = now.toLocaleTimeString('fa-IR', options);
+        document.getElementById("meetingTime").value = formattedTime;
+      } catch (e) {
+        console.error('Error in resetTime:', e);
+      }
     }
 
     function setCurrentDateTime() {
@@ -319,66 +345,94 @@
     }
 
     function addEntry() {
-      var entryDiv = document.createElement("div");
-      entryDiv.classList.add("entry-row");
-      entryDiv.innerHTML = `
-        <textarea placeholder="📌 مصوبه جدید"></textarea>
-        <div class="entry-details">
-          <input type="text" placeholder="👤 مسئول اجرا">
-          <input type="text" class="shamsi-date" placeholder="📅 مهلت اجرا">
-          <button type="button" class="remove-btn" onclick="removeEntry(this)">حذف</button>
-        </div>
-      `;
-      document.getElementById("entries").appendChild(entryDiv);
-      autoResizeTextarea(entryDiv.querySelector('textarea'));
+      try {
+        var entryDiv = document.createElement("div");
+        entryDiv.classList.add("entry-row");
+        entryDiv.innerHTML = `
+          <textarea placeholder="📌 مصوبه جدید"></textarea>
+          <div class="entry-details">
+            <input type="text" placeholder="👤 مسئول اجرا">
+            <input type="text" class="shamsi-date" placeholder="📅 مهلت اجرا">
+            <button type="button" class="remove-btn" onclick="removeEntry(this)">حذف</button>
+          </div>
+        `;
+        document.getElementById("entries").appendChild(entryDiv);
+        autoResizeTextarea(entryDiv.querySelector('textarea'));
+      } catch (e) {
+        console.error('Error in addEntry:', e);
+      }
     }
 
     function removeEntry(button) {
-      var entryRow = button.closest('.entry-row');
-      entryRow.remove();
+      try {
+        var entryRow = button.closest('.entry-row');
+        entryRow.remove();
+      } catch (e) {
+        console.error('Error in removeEntry:', e);
+      }
     }
 
     function addAttendee() {
-      var newName = document.getElementById("newAttendee").value.trim();
-      if (newName) {
-        var option = document.createElement("option");
-        option.text = newName;
-        option speculations = newName;
-        document.getElementById("attendeesList").add(option);
-        document.getElementById("newAttendee").value = "";
-        updateSelectedAttendees();
+      try {
+        var newName = document.getElementById("newAttendee").value.trim();
+        if (newName) {
+          var option = document.createElement("option");
+          option.text = newName;
+          option.value = newName;
+          document.getElementById("attendeesList").add(option);
+          document.getElementById("newAttendee").value = "";
+          updateSelectedAttendees();
+        }
+      } catch (e) {
+        console.error('Error in addAttendee:', e);
       }
     }
 
     document.getElementById("attendeesList").addEventListener("change", updateSelectedAttendees);
 
     function updateSelectedAttendees() {
-      var selectedList = document.getElementById("attendeesList");
-      var selectedAttendees = document.getElementById("selectedAttendeeList");
-      var names = [];
-      for (var i = 0; i < selectedList.options.length; i++) {
-        if (selectedList.options[i].selected) {
-          names.push(selectedList.options[i].value);
+      try {
+        var selectedList = document.getElementById("attendeesList");
+        var selectedAttendees = document.getElementById("selectedAttendeeList");
+        var names = [];
+        for (var i = 0; i < selectedList.options.length; i++) {
+          if (selectedList.options[i].selected) {
+            names.push(selectedList.options[i].value);
+          }
         }
+        selectedAttendees.textContent = names.join(', ');
+      } catch (e) {
+        console.error('Error in updateSelectedAttendees:', e);
       }
-      selectedAttendees.textContent = names.join(', ');
     }
 
     function updatePrintLocation() {
-      const location = document.getElementById("meetingLocation").value;
-      const printLocationDiv = document.getElementById("printMeetingLocationField");
-      printLocationDiv.textContent = location ? "📍 مکان جلسه: " + location : "";
+      try {
+        const location = document.getElementById("meetingLocation").value;
+        const printLocationDiv = document.getElementById("printMeetingLocationField");
+        printLocationDiv.textContent = location ? "📍 مکان جلسه: " + location : "";
+      } catch (e) {
+        console.error('Error in updatePrintLocation:', e);
+      }
     }
 
     document.getElementById("meetingLocation").addEventListener("change", updatePrintLocation);
 
     function sharePage() {
-      alert('این صفحه به اشتراک گذاشته شد!');
+      try {
+        alert('این صفحه به اشتراک گذاشته شد!');
+      } catch (e) {
+        console.error('Error in sharePage:', e);
+      }
     }
 
     function autoResizeTextarea(textarea) {
-      textarea.style.height = 'auto';
-      textarea.style.height = textarea.scrollHeight + 'px';
+      try {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+      } catch (e) {
+        console.error('Error in autoResizeTextarea:', e);
+      }
     }
 
     document.querySelectorAll('textarea').forEach(function(textarea) {
@@ -388,8 +442,12 @@
     });
 
     window.onload = function () {
-      setCurrentDateTime();
-      updatePrintLocation();
+      try {
+        setCurrentDateTime();
+        updatePrintLocation();
+      } catch (e) {
+        console.error('Error in window.onload:', e);
+      }
     };
   </script>
 </body>
