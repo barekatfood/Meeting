@@ -125,6 +125,15 @@
       height: 100px;
       overflow-y: auto;
       line-height: 1.2;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .attendees-list label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .attendees-input, .primary-btn {
@@ -280,17 +289,17 @@
       <textarea id="topic" class="topic-section" placeholder="🔹 موضوع جلسه" required></textarea>
 
       <div class="attendees-section">
-        <select id="attendeesList" class="attendees-list" multiple>
-          <option value="محمد جواد اسماعیلی">محمد جواد اسماعیلی</option>
-          <option value="علیرضا اسماعیلی">علیرضا اسماعیلی</option>
-          <option value="علیرضا کیایی">علیرضا کیایی</option>
-          <option value="علی سلیمی">علی سلیمی</option>
-          <option value="کاظم کاظمی">کاظم کاظمی</option>
-          <option value="رضا خانی">رضا خانی</option>
-          <option value="آقای اخباریه">آقای اخباریه</option>
-          <option value="محمدرضا صالحی">محمدرضا صالحی</option>
-          <option value="محمد صباغی">محمد صباغی</option>
-        </select>
+        <div id="attendeesList" class="attendees-list">
+          <label><input type="checkbox" value="محمد جواد اسماعیلی">محمد جواد اسماعیلی</label>
+          <label><input type="checkbox" value="علیرضا اسماعیلی">علیرضا اسماعیلی</label>
+          <label><input type="checkbox" value="علیرضا کیایی">علیرضا کیایی</label>
+          <label><input type="checkbox" value="علی سلیمی">علی سلیمی</label>
+          <label><input type="checkbox" value="کاظم کاظمی">کاظم کاظمی</label>
+          <label><input type="checkbox" value="رضا خانی">رضا خانی</label>
+          <label><input type="checkbox" value="آقای اخباریه">آقای اخباریه</label>
+          <label><input type="checkbox" value="محمدرضا صالحی">محمدرضا صالحی</label>
+          <label><input type="checkbox" value="محمد صباغی">محمد صباغی</label>
+        </div>
         <input type="text" id="newAttendee" class="attendees-input" placeholder="➕ افزودن نام جدید">
         <button type="button" class="primary-btn" onclick="addAttendee()">افزودن</button>
       </div>
@@ -348,7 +357,7 @@
 
     function addEntry() {
       try {
-        console.log('addEntry called'); // دیباگ
+        console.log('addEntry called');
         var entryDiv = document.createElement("div");
         entryDiv.classList.add("entry-row");
         entryDiv.innerHTML = `
@@ -379,11 +388,11 @@
       try {
         var newName = document.getElementById("newAttendee").value.trim();
         if (newName) {
-          var option = document.createElement("option");
-          option.text = newName;
-          option.value = newName; // اصلاح خطا
-          document.getElementById("attendeesList").add(option);
+          var label = document.createElement("label");
+          label.innerHTML = `<input type="checkbox" value="${newName}">${newName}`;
+          document.getElementById("attendeesList").appendChild(label);
           document.getElementById("newAttendee").value = "";
+          label.querySelector('input').addEventListener('change', updateSelectedAttendees);
           updateSelectedAttendees();
         }
       } catch (e) {
@@ -391,19 +400,17 @@
       }
     }
 
-    document.getElementById("attendeesList").addEventListener("change", updateSelectedAttendees);
-
     function updateSelectedAttendees() {
       try {
-        console.log('updateSelectedAttendees called'); // دیباگ
-        var selectedList = document.getElementById("attendeesList");
+        console.log('updateSelectedAttendees called');
+        var checkboxes = document.querySelectorAll('#attendeesList input[type="checkbox"]');
         var selectedAttendees = document.getElementById("selectedAttendeeList");
         var names = [];
-        for (var i = 0; i < selectedList.options.length; i++) {
-          if (selectedList.options[i].selected) {
-            names.push(selectedList.options[i].value);
+        checkboxes.forEach(function(checkbox) {
+          if (checkbox.checked) {
+            names.push(checkbox.value);
           }
-        }
+        });
         selectedAttendees.textContent = names.join(', ');
       } catch (e) {
         console.error('Error in updateSelectedAttendees:', e);
@@ -417,16 +424,6 @@
         printLocationDiv.textContent = location ? "📍 مکان جلسه: " + location : "";
       } catch (e) {
         console.error('Error in updatePrintLocation:', e);
-      }
-    }
-
-    document.getElementById("meetingLocation").addEventListener("change", updatePrintLocation);
-
-    function sharePage() {
-      try {
-        alert('این صفحه به اشتراک گذاشته شد!');
-      } catch (e) {
-        console.error('Error in sharePage:', e);
       }
     }
 
@@ -449,6 +446,10 @@
       try {
         setCurrentDateTime();
         updatePrintLocation();
+        document.getElementById("meetingLocation").addEventListener("change", updatePrintLocation);
+        document.querySelectorAll('#attendeesList input[type="checkbox"]').forEach(function(checkbox) {
+          checkbox.addEventListener('change', updateSelectedAttendees);
+        });
       } catch (e) {
         console.error('Error in window.onload:', e);
       }
