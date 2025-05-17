@@ -122,6 +122,8 @@
       border-radius: var(--border-radius);
       font-size: var(--font-size);
       padding: 6px;
+      height: 100px;
+      overflow-y: auto;
       line-height: 1.2;
     }
 
@@ -346,6 +348,7 @@
 
     function addEntry() {
       try {
+        console.log('addEntry called'); // دیباگ
         var entryDiv = document.createElement("div");
         entryDiv.classList.add("entry-row");
         entryDiv.innerHTML = `
@@ -378,7 +381,7 @@
         if (newName) {
           var option = document.createElement("option");
           option.text = newName;
-          option.value = newName;
+          option.value = newName; // اصلاح خطا
           document.getElementById("attendeesList").add(option);
           document.getElementById("newAttendee").value = "";
           updateSelectedAttendees();
@@ -392,6 +395,7 @@
 
     function updateSelectedAttendees() {
       try {
+        console.log('updateSelectedAttendees called'); // دیباگ
         var selectedList = document.getElementById("attendeesList");
         var selectedAttendees = document.getElementById("selectedAttendeeList");
         var names = [];
