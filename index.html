@@ -223,6 +223,9 @@
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
       background-color: rgba(123, 63, 228, 0.1);
+      display: block;
+      visibility: visible;
+      min-height: 50px;
     }
 
     #archive table {
@@ -258,7 +261,7 @@
 
     @media print {
       .primary-btn, .attendees-input, #attendeesList, .remove-btn, #archive {
-        display: none;
+        display: none !important;
       }
       select {
         display: none !important;
@@ -423,10 +426,11 @@
             deadline: row.querySelector(".entry-details input:nth-child(2)").value
           }))
         };
-        let meetings = JSON.parse(localStorage.getItem("meetings") || "[]");
+        let meetings = JSON.parse(localStorage.getItem("meetings") || "[]") || [];
         meetings.push(meeting);
         localStorage.setItem("meetings", JSON.stringify(meetings));
         alert("صورت‌جلسه ذخیره شد!");
+        console.log('Saved meeting:', meeting);
         resetForm();
         displayArchive();
       } catch (e) {
@@ -436,7 +440,7 @@
 
     function editMeeting(id) {
       try {
-        const meetings = JSON.parse(localStorage.getItem("meetings") || "[]");
+        const meetings = JSON.parse(localStorage.getItem("meetings") || "[]") || [];
         const meeting = meetings.find(m => m.id === id);
         editingMeetingId = id;
 
@@ -483,7 +487,7 @@
     function updateMeeting() {
       try {
         if (editingMeetingId === null) return;
-        const meetings = JSON.parse(localStorage.getItem("meetings") || "[]");
+        const meetings = JSON.parse(localStorage.getItem("meetings") || "[]") || [];
         const updatedMeeting = {
           id: editingMeetingId,
           date: document.getElementById("meetingDate").value,
@@ -501,6 +505,7 @@
         const updatedMeetings = meetings.map(m => m.id === editingMeetingId ? updatedMeeting : m);
         localStorage.setItem("meetings", JSON.stringify(updatedMeetings));
         alert("صورت‌جلسه به‌روزرسانی شد!");
+        console.log('Updated meeting:', updatedMeeting);
         resetForm();
         displayArchive();
       } catch (e) {
@@ -509,28 +514,41 @@
     }
 
     function resetForm() {
-      document.getElementById("meetingForm").reset();
-      document.getElementById("entries").innerHTML = `
-        <div class="entry-row">
-          <textarea placeholder="📌 مصوبه"></textarea>
-          <div class="entry-details">
-            <input type="text" placeholder="👤 مسئول اجرا">
-            <input type="text" class="shamsi-date" placeholder="📅 مهلت اجرا">
-            <button type="button" class="remove-btn" onclick="removeEntry(this)">حذف</button>
+      try {
+        document.getElementById("meetingForm").reset();
+        document.getElementById("entries").innerHTML = `
+          <div class="entry-row">
+            <textarea placeholder="📌 مصوبه"></textarea>
+            <div class="entry-details">
+              <input type="text" placeholder="👤 مسئول اجرا">
+              <input type="text" class="shamsi-date" placeholder="📅 مهلت اجرا">
+              <button type="button" class="remove-btn" onclick="removeEntry(this)">حذف</button>
+            </div>
           </div>
-        </div>
-      `;
-      document.getElementById("selectedAttendeeList").textContent = "";
-      document.getElementById("saveMeetingBtn").style.display = "inline-block";
-      document.getElementById("updateMeetingBtn").style.display = "none";
-      editingMeetingId = null;
-      setCurrentDateTime();
+        `;
+        document.getElementById("selectedAttendeeList").textContent = "";
+        document.getElementById("saveMeetingBtn").style.display = "inline-block";
+        document.getElementById("updateMeetingBtn").style.display = "none";
+        editingMeetingId = null;
+        setCurrentDateTime();
+      } catch (e) {
+        console.error('Error in resetForm:', e);
+      }
     }
 
     function displayArchive() {
       try {
-        const meetings = JSON.parse(localStorage.getItem("meetings") || "[]");
+        console.log('displayArchive called');
+        const meetings = JSON.parse(localStorage.getItem("meetings") || "[]") || [];
+        console.log('Meetings:', meetings);
         const archiveDiv = document.getElementById("archive");
+        if (meetings.length === 0) {
+          archiveDiv.innerHTML = `
+            <h3>آرشیو صورت‌جلسات</h3>
+            <p>هیچ صورت‌جلسه‌ای ذخیره نشده است.</p>
+          `;
+          return;
+        }
         archiveDiv.innerHTML = `
           <h3>آرشیو صورت‌جلسات</h3>
           <table style="width: 100%; border-collapse: collapse;">
@@ -542,9 +560,9 @@
             </tr>
             ${meetings.sort((a, b) => a.id - b.id).map(meeting => `
               <tr>
-                <td>${meeting.date}</td>
-                <td>${meeting.number}</td>
-                <td>${meeting.topic}</td>
+                <td>${meeting.date || ''}</td>
+                <td>${meeting.number || ''}</td>
+                <td>${meeting.topic || ''}</td>
                 <td>
                   <button onclick="viewMeeting(${meeting.id})">مشاهده</button>
                   <button onclick="editMeeting(${meeting.id})">ویرایش</button>
@@ -556,52 +574,35 @@
         `;
       } catch (e) {
         console.error('Error in displayArchive:', e);
+        document.getElementById("archive").innerHTML = `
+          <h3>آرشیو صورت‌جلسات</h3>
+          <p>خطا در بارگذاری آرشیو. لطفاً کنسول را بررسی کنید.</p>
+        `;
       }
     }
 
     function viewMeeting(id) {
       try {
-        const meetings = JSON.parse(localStorage.getItem("meetings") || "[]");
+        const meetings = JSON.parse(localStorage.getItem("meetings") || "[]") || [];
         const meeting = meetings.find(m => m.id === id);
+        if (!meeting) {
+          alert('صورت‌جلسه یافت نشد!');
+          return;
+        }
         alert(`
           صورت‌جلسه شرکت بهین تهیه غذای برکت
-          تاریخ: ${meeting.date}
-          ساعت: ${meeting.time}
-          شماره جلسه: ${meeting.number}
-          مکان: ${meeting.location}
-          موضوع: ${meeting.topic}
-          حاضرین: ${meeting.attendees.join(", ")}
+          تاریخ: ${meeting.date || ''}
+          ساعت: ${meeting.time || ''}
+          شماره جلسه: ${meeting.number || ''}
+          مکان: ${meeting.location || ''}
+          موضوع: ${meeting.topic || ''}
+          حاضرین: ${meeting.attendees.join(", ") || 'هیچ‌کس'}
           مصوبات:
-          ${meeting.entries.map((e, i) => `${i + 1}. مصوبه: ${e.text}, مسئول: ${e.responsible}, مهلت: ${e.deadline}`).join("\n")}
+          ${meeting.entries.map((e, i) => `${i + 1}. مصوبه: ${e.text || ''}, مسئول: ${e.responsible || ''}, مهلت: ${e.deadline || ''}`).join("\n") || 'هیچ مصوبه‌ای'}
         `);
       } catch (e) {
         console.error('Error in viewMeeting:', e);
       }
     }
 
-    function downloadMeeting(id) {
-      try {
-        const meetings = JSON.parse(localStorage.getItem("meetings") || "[]");
-        const meeting = meetings.find(m => m.id === id);
-        const data = `
-          صورت‌جلسه شرکت بهین تهیه غذای برکت
-          تاریخ: ${meeting.date}
-          ساعت: ${meeting.time}
-          شماره جلسه: ${meeting.number}
-          مکان: ${meeting.location}
-          موضوع: ${meeting.topic}
-          حاضرین: ${meeting.attendees.join(", ")}
-          مصوبات:
-          ${meeting.entries.map((e, i) => `${i + 1}. مصوبه: ${e.text}, مسئول: ${e.responsible}, مهلت: ${e.deadline}`).join("\n")}
-        `;
-        const blob = new Blob([data], { type: "text/plain" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `Meeting_${meeting.number}.txt`;
-        a.click();
-        URL.revokeObjectURL(url);
-      } catch (e) {
-        console.error('Error in downloadMeeting:', e);
-      }
-    }
+    function down
