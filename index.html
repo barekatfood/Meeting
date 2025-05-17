@@ -4,33 +4,37 @@
   <meta charset="UTF-8">
   <title>صورتجلسه شرکت بهین تهیه غذای برکت</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://i.imgur.com; script-src 'self' 'unsafe-inline'">
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --primary-color: #00C4B4; /* آبی فیروزه‌ای (Canva) */
-      --secondary-color: #7B3FE4; /* بنفش (Canva) */
-      --accent-color: #FF6B9B; /* صورتی (Canva) */
+      --primary-color: #00C4B4;
+      --secondary-color: #7B3FE4;
+      --accent-color: #FF6B9B;
       --font-family: 'Vazirmatn', Tahoma, Arial, sans-serif;
-      --background-color: #F5F6F5; /* خاکستری خیلی روشن */
-      --text-color: #1F2A44; /* خاکستری تیره */
+      --background-color: #F5F6F5;
+      --text-color: #1F2A44;
       --border-radius: 12px;
-      --font-size: 10px; /* فونت اصلی 10px */
+      --font-size: 10px;
     }
 
     * {
       box-sizing: border-box;
     }
 
-    body {
+    body, input, select, textarea, #selectedAttendees, #attendeesList, #archive, .info-row, .entry-details {
       font-family: var(--font-family);
       font-size: var(--font-size);
+      line-height: 1.2;
+    }
+
+    body {
       font-weight: 400;
       background: var(--background-color);
       color: var(--text-color);
       margin: 0;
       padding: 15px;
-      line-height: 1.2;
     }
 
     .container {
@@ -68,32 +72,19 @@
       border-radius: var(--border-radius);
       padding: 8px;
       background-color: rgba(123, 63, 228, 0.1);
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
     }
 
     .info-row input,
     .info-row select,
-    .info-row select option {
+    .info-row textarea {
       flex: 1;
       padding: 8px;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
-      font-size: var(--font-size);
       text-align: center;
-      line-height: 1.2;
-    }
-
-    .topic-section {
-      width: 100%;
-      margin: 8px 0;
-      padding: 8px;
-      border: 2px solid var(--primary-color);
-      border-radius: var(--border-radius);
-      text-align: center;
-      height: 60px;
-      font-size: var(--font-size);
-      resize: vertical;
-      line-height: 1.2;
+      height: 40px;
+      resize: none;
     }
 
     .entry-row textarea {
@@ -101,10 +92,9 @@
       padding: 8px;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
-      min-height: 80px;
-      font-size: var(--font-size);
+      height: 40px;
       resize: vertical;
-      line-height: 1.2;
+      box-sizing: border-box;
     }
 
     .attendees-section {
@@ -117,15 +107,8 @@
       flex: 0 0 25%;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
-      font-size: var(--font-size);
       padding: 8px;
-      line-height: 1.2;
       max-height: 48px;
-    }
-
-    .attendees-list option {
-      font-size: var(--font-size);
-      line-height: 1.2;
     }
 
     .attendees-input {
@@ -133,8 +116,6 @@
       padding: 8px;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
-      font-size: var(--font-size);
-      line-height: 1.2;
     }
 
     .attendees-section .primary-btn {
@@ -142,8 +123,6 @@
       padding: 8px;
       border: none;
       border-radius: var(--border-radius);
-      font-size: var(--font-size);
-      line-height: 1.2;
     }
 
     .entry-row {
@@ -164,8 +143,6 @@
       padding: 8px;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
-      font-size: var(--font-size);
-      line-height: 1.2;
       min-width: 100px;
     }
 
@@ -182,11 +159,12 @@
       border: none;
       border-radius: var(--border-radius);
       cursor: pointer;
-      padding: 8px 12px;
+      padding: 10px 16px;
       font-size: var(--font-size);
       transition: background-color 0.3s;
       line-height: 1.2;
       pointer-events: auto;
+      display: inline-block !important;
     }
 
     .primary-btn:hover {
@@ -201,7 +179,6 @@
       cursor: pointer;
       padding: 4px 8px;
       font-size: var(--font-size);
-      line-height: 1.2;
     }
 
     #selectedAttendees {
@@ -209,9 +186,12 @@
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
       padding: 8px;
-      font-size: var(--font-size);
-      line-height: 1.2;
       background-color: rgba(255, 107, 155, 0.1);
+    }
+
+    #selectedAttendees h3 {
+      font-size: var(--font-size);
+      margin: 4px 0;
     }
 
     #archive {
@@ -234,7 +214,6 @@
       border: 1px solid var(--primary-color);
       padding: 8px;
       text-align: center;
-      font-size: var(--font-size);
     }
 
     #archive button {
@@ -247,6 +226,7 @@
       font-size: var(--font-size);
       margin: 0 2px;
       pointer-events: auto;
+      display: inline-block !important;
     }
 
     #archive button:hover {
@@ -267,6 +247,7 @@
       .info-row {
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
       }
       .print-only {
         display: block;
@@ -280,18 +261,48 @@
         background-color: rgba(123, 63, 228, 0.1);
         flex: 1;
         min-width: 100px;
-        font-size: var(--font-size);
-        line-height: 1.2;
+        font-size: 12px;
+        line-height: 1.4;
       }
-      .topic-section, .entry-row textarea {
-        font-size: var(--font-size);
+      .info-row input,
+      .info-row textarea {
+        font-size: 12px;
+        height: auto;
+        width: 100%;
+        text-align: center;
+      }
+      .entry-row textarea {
+        font-size: 12px;
         min-height: 60px;
-        line-height: 1.2;
+        height: auto;
+        line-height: 1.4;
+      }
+      .entry-details {
+        display: none;
+      }
+      .entry-details:not(:empty) {
+        display: flex;
+        flex-direction: column;
+        width: 100px;
+        margin-right: auto;
+        font-size: 12px;
+      }
+      .entry-details input {
+        width: 100%;
+        min-width: 0;
+        padding: 4px;
+        font-size: 12px;
+        line-height: 1.4;
       }
       #selectedAttendees {
-        font-size: var(--font-size);
-        line-height: 1.2;
-        background-color: rgba(255, 107, 155, 0.1);
+        font-size: 12px;
+        line-height: 1.4;
+        background-color: transparent;
+      }
+      body, input, textarea {
+        font-family: var(--font-family);
+        font-size: 12px;
+        line-height: 1.4;
       }
     }
   </style>
@@ -308,17 +319,11 @@
 
     <form id="meetingForm">
       <div class="info-row">
-        <div style="display: flex; align-items: center; gap: 5px; flex: 1;">
-          <input type="text" id="meetingDate" placeholder="📅 تاریخ جلسه">
-          <button type="button" onclick="resetDate()" title="بازنشانی تاریخ" style="background: none; border: none; cursor: pointer;">🔄</button>
-        </div>
-        <div style="display: flex; align-items: center; gap: 5px; flex: 1;">
-          <input type="text" id="meetingTime" placeholder="⏰ ساعت جلسه">
-          <button type="button" onclick="resetTime()" title="بازنشانی ساعت" style="background: none; border: none; cursor: pointer;">🔄</button>
-        </div>
-        <input type="text" id="meetingNumber" placeholder="🔢 شماره جلسه" required>
+        <input type="text" id="meetingDate" placeholder="📅 تاریخ">
+        <input type="text" id="meetingTime" placeholder="⏰ ساعت">
+        <input type="text" id="meetingNumber" placeholder="🔢 شماره" required>
         <select id="meetingLocation">
-          <option value="">📍 مکان جلسه</option>
+          <option value="">📍 مکان</option>
           <option value="دفتر باغ فیض">دفتر باغ فیض</option>
           <option value="دفتر مرکزی">دفتر مرکزی</option>
           <option value="شعبه مسجد">شعبه مسجد</option>
@@ -326,10 +331,9 @@
           <option value="شعبه الزهرا سلام الله علیها">شعبه الزهرا سلام الله علیها</option>
           <option value="سرای لبخند">سرای لبخند</option>
         </select>
+        <textarea id="topic" class="topic-section" placeholder="🔹 موضوع" required></textarea>
         <div class="print-only info-print" id="printMeetingLocationField"></div>
       </div>
-
-      <textarea id="topic" class="topic-section" placeholder="🔹 موضوع جلسه" required></textarea>
 
       <div class="attendees-section">
         <select id="attendeesList" class="attendees-list" multiple>
@@ -344,7 +348,7 @@
           <option value="محمد صباغی">محمد صباغی</option>
         </select>
         <input type="text" id="newAttendee" class="attendees-input" placeholder="➕ افزودن نام جدید">
-        <button type="button" class="primary-btn" onclick="addAttendee()">افزودن</button>
+        <button type="button" class="primary-btn" id="addAttendeeBtn">افزودن</button>
       </div>
 
       <div id="selectedAttendees">
@@ -363,11 +367,11 @@
       </div>
 
       <div class="action-buttons">
-        <button type="button" class="primary-btn" id="saveMeetingBtn" onclick="saveMeeting()">💾 ذخیره صورت‌جلسه</button>
-        <button type="button" class="primary-btn" id="updateMeetingBtn" onclick="updateMeeting()" style="display: none;">💾 ذخیره تغییرات</button>
-        <button type="button" class="primary-btn" id="addEntryBtn" onclick="addEntry()">+ افزودن مصوبه جدید</button>
-        <button type="button" class="primary-btn" onclick="window.print()">🖨️ پرینت</button>
-        <button type="button" class="primary-btn" onclick="sharePage()">📤 اشتراک‌گذاری</button>
+        <button type="button" class="primary-btn" id="saveMeetingBtn">💾 ذخیره صورت‌جلسه</button>
+        <button type="button" class="primary-btn" id="updateMeetingBtn" style="display: none;">💾 ذخیره تغییرات</button>
+        <button type="button" class="primary-btn" id="addEntryBtn">+ افزودن مصوبه جدید</button>
+        <button type="button" class="primary-btn" id="printBtn">🖨️ پرینت</button>
+        <button type="button" class="primary-btn" id="shareBtn">📤 اشتراک‌گذاری</button>
       </div>
     </form>
 
@@ -377,39 +381,69 @@
   <script>
     let editingMeetingId = null;
 
+    // تاریخ و ساعت شمسی دستی
+    function toPersianDigits(num) {
+      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+      return num.toString().replace(/\d/g, d => persianDigits[d]);
+    }
+
+    function getPersianDateTime() {
+      const date = new Date();
+      const gregorianYear = date.getFullYear();
+      const gregorianMonth = date.getMonth();
+      const gregorianDay = date.getDate();
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+
+      // تبدیل به شمسی (تقریبی)
+      const jalaliYear = gregorianYear - (gregorianYear > 1596 ? 621 : 622);
+      const daysInMonth = [31, (jalaliYear % 4 === 3 ? 30 : 29), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+      let jalaliMonth = gregorianMonth + 1;
+      let jalaliDay = gregorianDay;
+
+      if (gregorianMonth < 2 || (gregorianMonth === 2 && gregorianDay < 20)) {
+        jalaliYear--;
+        jalaliMonth += 12;
+      }
+
+      const formattedDate = `${toPersianDigits(jalaliYear)}-${toPersianDigits(jalaliMonth.toString().padStart(2, '0'))}-${toPersianDigits(jalaliDay.toString().padStart(2, '0'))}`;
+      const formattedTime = `${toPersianDigits(hours.toString().padStart(2, '0'))}:${toPersianDigits(minutes.toString().padStart(2, '0'))}`;
+      return { date: formattedDate, time: formattedTime };
+    }
+
     function resetDate() {
       try {
         console.log('resetDate called');
-        const now = new Date();
-        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-        const formattedDate = now.toLocaleDateString('fa-IR', options).replace(/\//g, '-');
+        const { date } = getPersianDateTime();
         const meetingDate = document.getElementById("meetingDate");
         if (meetingDate) {
-          meetingDate.value = formattedDate;
-          console.log('Date set:', formattedDate);
+          meetingDate.value = date;
+          console.log('Date set:', date);
         } else {
           console.error('meetingDate element not found');
+          alert('خطا: عنصر تاریخ یافت نشد.');
         }
       } catch (e) {
         console.error('Error in resetDate:', e);
+        alert('خطا در بازنشانی تاریخ.');
       }
     }
 
     function resetTime() {
       try {
         console.log('resetTime called');
-        const now = new Date();
-        const options = { hour: '2-digit', minute: '2-digit', hour12: false };
-        const formattedTime = now.toLocaleTimeString('fa-IR', options);
+        const { time } = getPersianDateTime();
         const meetingTime = document.getElementById("meetingTime");
         if (meetingTime) {
-          meetingTime.value = formattedTime;
-          console.log('Time set:', formattedTime);
+          meetingTime.value = time;
+          console.log('Time set:', time);
         } else {
           console.error('meetingTime element not found');
+          alert('خطا: عنصر ساعت یافت نشد.');
         }
       } catch (e) {
         console.error('Error in resetTime:', e);
+        alert('خطا در بازنشانی ساعت.');
       }
     }
 
@@ -420,6 +454,7 @@
         resetTime();
       } catch (e) {
         console.error('Error in setCurrentDateTime:', e);
+        alert('خطا در تنظیم تاریخ و ساعت.');
       }
     }
 
@@ -441,7 +476,7 @@
         }
 
         if (!meetingNumber.value || !topic.value) {
-          alert('لطفاً شماره جلسه و موضوع را وارد کنید.');
+          alert('لطفاً شماره جلسه و موضوع را وارد کنید (مثال: 1404-01).');
           return;
         }
 
@@ -452,66 +487,31 @@
           number: meetingNumber.value,
           location: meetingLocation.value,
           topic: topic.value,
-          attendees: [],
-          entries: []
+          attendees: Array.from(attendeesList.selectedOptions).map(option => option.value),
+          entries: Array.from(entryRows).map(row => ({
+            text: row.querySelector("textarea").value,
+            responsible: row.querySelector(".entry-details input:nth-child(1)").value,
+            deadline: row.querySelector(".entry-details input:nth-child(2)").value
+          }))
         };
 
-        for (let i = 0; i < attendeesList.options.length; i++) {
-          if (attendeesList.options[i].selected) {
-            meeting.attendees.push(attendeesList.options[i].value);
-          }
-        }
-
-        for (let i = 0; i < entryRows.length; i++) {
-          const row = entryRows[i];
-          const textarea = row.querySelector("textarea");
-          const responsible = row.querySelector(".entry-details input:nth-child(1)");
-          const deadline = row.querySelector(".entry-details input:nth-child(2)");
-          if (textarea && responsible && deadline) {
-            meeting.entries.push({
-              text: textarea.value,
-              responsible: responsible.value,
-              deadline: deadline.value
-            });
-          }
-        }
-
-        let meetings = [];
-        try {
-          meetings = JSON.parse(localStorage.getItem("meetings") || "[]") || [];
-        } catch (e) {
-          console.error('Error parsing localStorage:', e);
-          alert('خطا در دسترسی به ذخیره‌سازی محلی.');
-          return;
-        }
+        let meetings = JSON.parse(localStorage.getItem("meetings") || "[]") || [];
         meetings.push(meeting);
-        try {
-          localStorage.setItem("meetings", JSON.stringify(meetings));
-          console.log('Saved meeting:', meeting);
-          alert("صورت‌جلسه ذخیره شد!");
-          resetForm();
-          displayArchive();
-        } catch (e) {
-          console.error('Error saving to localStorage:', e);
-          alert('خطا در ذخیره صورت‌جلسه: ' + e.message);
-        }
+        localStorage.setItem("meetings", JSON.stringify(meetings));
+        console.log('Saved meeting:', meeting);
+        alert("صورت‌جلسه ذخیره شد!");
+        resetForm();
+        displayArchive();
       } catch (e) {
         console.error('Error in saveMeeting:', e);
-        alert('خطا در ذخیره صورت‌جلسه: ' + e.message);
+        alert('خطا در ذخیره صورت‌جلسه: لطفاً مرورگر را به‌روز کنید یا از سرور محلی استفاده کنید.');
       }
     }
 
     function editMeeting(id) {
       try {
         console.log('editMeeting called with id:', id);
-        let meetings = [];
-        try {
-          meetings = JSON.parse(localStorage.getItem("meetings") || "[]") || [];
-        } catch (e) {
-          console.error('Error parsing localStorage:', e);
-          alert('خطا در دسترسی به ذخیره‌سازی محلی.');
-          return;
-        }
+        let meetings = JSON.parse(localStorage.getItem("meetings") || "[]") || [];
         const meeting = meetings.find(m => m.id === id);
         if (!meeting) {
           alert('صورت‌جلسه یافت نشد!');
@@ -519,75 +519,37 @@
         }
         editingMeetingId = id;
 
-        const meetingDate = document.getElementById("meetingDate");
-        const meetingTime = document.getElementById("meetingTime");
-        const meetingNumber = document.getElementById("meetingNumber");
-        const meetingLocation = document.getElementById("meetingLocation");
-        const topic = document.getElementById("topic");
+        document.getElementById("meetingDate").value = meeting.date || '';
+        document.getElementById("meetingTime").value = meeting.time || '';
+        document.getElementById("meetingNumber").value = meeting.number || '';
+        document.getElementById("meetingLocation").value = meeting.location || '';
+        document.getElementById("topic").value = meeting.topic || '';
+        autoResizeTextarea(document.getElementById("topic"));
+
         const attendeesList = document.getElementById("attendeesList");
-        const entriesDiv = document.getElementById("entries");
-
-        if (!meetingDate || !meetingTime || !meetingNumber || !meetingLocation || !topic || !attendeesList || !entriesDiv) {
-          console.error('One or more form elements not found');
-          alert('خطا: برخی عناصر فرم یافت نشدند.');
-          return;
-        }
-
-        meetingDate.value = meeting.date || '';
-        meetingTime.value = meeting.time || '';
-        meetingNumber.value = meeting.number || '';
-        meetingLocation.value = meeting.location || '';
-        topic.value = meeting.topic || '';
-
-        for (let i = 0; i < attendeesList.options.length; i++) {
-          attendeesList.options[i].selected = meeting.attendees.includes(attendeesList.options[i].value);
-        }
+        Array.from(attendeesList.options).forEach(option => {
+          option.selected = meeting.attendees.includes(option.value);
+        });
         updateSelectedAttendees();
 
-        entriesDiv.innerHTML = '';
-        for (let i = 0; i < meeting.entries.length; i++) {
-          const entry = meeting.entries[i];
-          const entryDiv = document.createElement("div");
-          entryDiv.classList.add("entry-row");
-          const textarea = document.createElement("textarea");
-          textarea.placeholder = "📌 مصوبه";
-          textarea.value = entry.text || '';
-          const detailsDiv = document.createElement("div");
-          detailsDiv.classList.add("entry-details");
-          const responsibleInput = document.createElement("input");
-          responsibleInput.type = "text";
-          responsibleInput.placeholder = "👤 مسئول اجرا";
-          responsibleInput.value = entry.responsible || '';
-          const deadlineInput = document.createElement("input");
-          deadlineInput.type = "text";
-          deadlineInput.classList.add("shamsi-date");
-          deadlineInput.placeholder = "📅 مهلت اجرا";
-          deadlineInput.value = entry.deadline || '';
-          const removeBtn = document.createElement("button");
-          removeBtn.type = "button";
-          removeBtn.classList.add("remove-btn");
-          removeBtn.textContent = "حذف";
-          removeBtn.onclick = function() { removeEntry(this); };
-          detailsDiv.appendChild(responsibleInput);
-          detailsDiv.appendChild(deadlineInput);
-          detailsDiv.appendChild(removeBtn);
-          entryDiv.appendChild(textarea);
-          entryDiv.appendChild(detailsDiv);
-          entriesDiv.appendChild(entryDiv);
-          autoResizeTextarea(textarea);
-        }
+        const entriesDiv = document.getElementById("entries");
+        entriesDiv.innerHTML = meeting.entries.map(entry => `
+          <div class="entry-row">
+            <textarea placeholder="📌 مصوبه">${entry.text || ''}</textarea>
+            <div class="entry-details">
+              <input type="text" placeholder="👤 مسئول اجرا" value="${entry.responsible || ''}">
+              <input type="text" class="shamsi-date" placeholder="📅 مهلت اجرا" value="${entry.deadline || ''}">
+              <button type="button" class="remove-btn" onclick="removeEntry(this)">حذف</button>
+            </div>
+          </div>
+        `).join('');
+        Array.from(entriesDiv.querySelectorAll("textarea")).forEach(autoResizeTextarea);
 
-        const saveBtn = document.getElementById("saveMeetingBtn");
-        const updateBtn = document.getElementById("updateMeetingBtn");
-        if (saveBtn && updateBtn) {
-          saveBtn.style.display = "none";
-          updateBtn.style.display = "inline-block";
-        } else {
-          console.error('Save or update button not found');
-        }
+        document.getElementById("saveMeetingBtn").style.display = "none";
+        document.getElementById("updateMeetingBtn").style.display = "inline-block";
       } catch (e) {
         console.error('Error in editMeeting:', e);
-        alert('خطا در ویرایش صورت‌جلسه: ' + e.message);
+        alert('خطا در ویرایش صورت‌جلسه.');
       }
     }
 
@@ -598,18 +560,59 @@
           alert('هیچ صورت‌جلسه‌ای برای ویرایش انتخاب نشده است!');
           return;
         }
-        let meetings = [];
-        try {
-          meetings = JSON.parse(localStorage.getItem("meetings") || "[]") || [];
-        } catch (e) {
-          console.error('Error parsing localStorage:', e);
-          alert('خطا در دسترسی به ذخیره‌سازی محلی.');
-          return;
-        }
+        let meetings = JSON.parse(localStorage.getItem("meetings") || "[]") || [];
         const meetingDate = document.getElementById("meetingDate");
         const meetingTime = document.getElementById("meetingTime");
         const meetingNumber = document.getElementById("meetingNumber");
         const meetingLocation = document.getElementById("meetingLocation");
         const topic = document.getElementById("topic");
         const attendeesList = document.getElementById("attendeesList");
-        const entryRows = document.querySelectorAll(".
+        const entryRows = document.querySelectorAll(".entry-row");
+
+        if (!meetingDate || !meetingTime || !meetingNumber || !meetingLocation || !topic || !attendeesList || !entryRows.length) {
+          console.error('One or more form elements not found');
+          alert('خطا: برخی عناصر فرم یافت نشدند.');
+          return;
+        }
+
+        if (!meetingNumber.value || !topic.value) {
+          alert('لطفاً شماره جلسه و موضوع را وارد کنید (مثال: 1404-01).');
+          return;
+        }
+
+        const updatedMeeting = {
+          id: editingMeetingId,
+          date: meetingDate.value,
+          time: meetingTime.value,
+          number: meetingNumber.value,
+          location: meetingLocation.value,
+          topic: topic.value,
+          attendees: Array.from(attendeesList.selectedOptions).map(option => option.value),
+          entries: Array.from(entryRows).map(row => ({
+            text: row.querySelector("textarea").value,
+            responsible: row.querySelector(".entry-details input:nth-child(1)").value,
+            deadline: row.querySelector(".entry-details input:nth-child(2)").value
+          }))
+        };
+
+        meetings = meetings.map(m => m.id === editingMeetingId ? updatedMeeting : m);
+        localStorage.setItem("meetings", JSON.stringify(meetings));
+        console.log('Updated meeting:', updatedMeeting);
+        alert("صورت‌جلسه به‌روزرسانی شد!");
+        resetForm();
+        displayArchive();
+      } catch (e) {
+        console.error('Error in updateMeeting:', e);
+        alert('خطا در به‌روزرسانی صورت‌جلسه.');
+      }
+    }
+
+    function resetForm() {
+      try {
+        console.log('resetForm called');
+        document.getElementById("meetingForm").reset();
+        document.getElementById("entries").innerHTML = `
+          <div class="entry-row">
+            <textarea placeholder="📌 مصوبه"></textarea>
+            <div class="entry-details">
+              <input type
