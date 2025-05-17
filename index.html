@@ -379,11 +379,17 @@
 
     function resetDate() {
       try {
+        console.log('resetDate called');
         const now = new Date();
         const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
         const formattedDate = now.toLocaleDateString('fa-IR', options).replace(/\//g, '-');
-        document.getElementById("meetingDate").value = formattedDate;
-        console.log('Date reset:', formattedDate);
+        const meetingDate = document.getElementById("meetingDate");
+        if (meetingDate) {
+          meetingDate.value = formattedDate;
+          console.log('Date set:', formattedDate);
+        } else {
+          console.error('meetingDate element not found');
+        }
       } catch (e) {
         console.error('Error in resetDate:', e);
       }
@@ -391,11 +397,17 @@
 
     function resetTime() {
       try {
+        console.log('resetTime called');
         const now = new Date();
         const options = { hour: '2-digit', minute: '2-digit', hour12: false };
         const formattedTime = now.toLocaleTimeString('fa-IR', options);
-        document.getElementById("meetingTime").value = formattedTime;
-        console.log('Time reset:', formattedTime);
+        const meetingTime = document.getElementById("meetingTime");
+        if (meetingTime) {
+          meetingTime.value = formattedTime;
+          console.log('Time set:', formattedTime);
+        } else {
+          console.error('meetingTime element not found');
+        }
       } catch (e) {
         console.error('Error in resetTime:', e);
       }
@@ -403,6 +415,7 @@
 
     function setCurrentDateTime() {
       try {
+        console.log('setCurrentDateTime called');
         resetDate();
         resetTime();
       } catch (e) {
@@ -421,9 +434,14 @@
         const attendeesList = document.getElementById("attendeesList");
         const entryRows = document.querySelectorAll(".entry-row");
 
-        if (!meetingDate || !meetingNumber || !topic || !attendeesList || !entryRows) {
-          console.error('One or more elements not found');
+        if (!meetingDate || !meetingTime || !meetingNumber || !meetingLocation || !topic || !attendeesList || !entryRows.length) {
+          console.error('One or more form elements not found');
           alert('خطا: برخی عناصر فرم یافت نشدند.');
+          return;
+        }
+
+        if (!meetingNumber.value || !topic.value) {
+          alert('لطفاً شماره جلسه و موضوع را وارد کنید.');
           return;
         }
 
@@ -438,14 +456,12 @@
           entries: []
         };
 
-        // جمع‌آوری حاضرین
         for (let i = 0; i < attendeesList.options.length; i++) {
           if (attendeesList.options[i].selected) {
             meeting.attendees.push(attendeesList.options[i].value);
           }
         }
 
-        // جمع‌آوری مصوبات
         for (let i = 0; i < entryRows.length; i++) {
           const row = entryRows[i];
           const textarea = row.querySelector("textarea");
@@ -460,13 +476,25 @@
           }
         }
 
-        let meetings = JSON.parse(localStorage.getItem("meetings") || "[]") || [];
+        let meetings = [];
+        try {
+          meetings = JSON.parse(localStorage.getItem("meetings") || "[]") || [];
+        } catch (e) {
+          console.error('Error parsing localStorage:', e);
+          alert('خطا در دسترسی به ذخیره‌سازی محلی.');
+          return;
+        }
         meetings.push(meeting);
-        localStorage.setItem("meetings", JSON.stringify(meetings));
-        alert("صورت‌جلسه ذخیره شد!");
-        console.log('Saved meeting:', meeting);
-        resetForm();
-        displayArchive();
+        try {
+          localStorage.setItem("meetings", JSON.stringify(meetings));
+          console.log('Saved meeting:', meeting);
+          alert("صورت‌جلسه ذخیره شد!");
+          resetForm();
+          displayArchive();
+        } catch (e) {
+          console.error('Error saving to localStorage:', e);
+          alert('خطا در ذخیره صورت‌جلسه: ' + e.message);
+        }
       } catch (e) {
         console.error('Error in saveMeeting:', e);
         alert('خطا در ذخیره صورت‌جلسه: ' + e.message);
@@ -476,7 +504,14 @@
     function editMeeting(id) {
       try {
         console.log('editMeeting called with id:', id);
-        const meetings = JSON.parse(localStorage.getItem("meetings") || "[]") || [];
+        let meetings = [];
+        try {
+          meetings = JSON.parse(localStorage.getItem("meetings") || "[]") || [];
+        } catch (e) {
+          console.error('Error parsing localStorage:', e);
+          alert('خطا در دسترسی به ذخیره‌سازی محلی.');
+          return;
+        }
         const meeting = meetings.find(m => m.id === id);
         if (!meeting) {
           alert('صورت‌جلسه یافت نشد!');
@@ -484,7 +519,6 @@
         }
         editingMeetingId = id;
 
-        // پر کردن فرم
         const meetingDate = document.getElementById("meetingDate");
         const meetingTime = document.getElementById("meetingTime");
         const meetingNumber = document.getElementById("meetingNumber");
@@ -493,8 +527,8 @@
         const attendeesList = document.getElementById("attendeesList");
         const entriesDiv = document.getElementById("entries");
 
-        if (!meetingDate || !meetingNumber || !topic || !attendeesList || !entriesDiv) {
-          console.error('One or more elements not found');
+        if (!meetingDate || !meetingTime || !meetingNumber || !meetingLocation || !topic || !attendeesList || !entriesDiv) {
+          console.error('One or more form elements not found');
           alert('خطا: برخی عناصر فرم یافت نشدند.');
           return;
         }
@@ -505,13 +539,11 @@
         meetingLocation.value = meeting.location || '';
         topic.value = meeting.topic || '';
 
-        // انتخاب حاضرین
         for (let i = 0; i < attendeesList.options.length; i++) {
           attendeesList.options[i].selected = meeting.attendees.includes(attendeesList.options[i].value);
         }
         updateSelectedAttendees();
 
-        // افزودن مصوبات
         entriesDiv.innerHTML = '';
         for (let i = 0; i < meeting.entries.length; i++) {
           const entry = meeting.entries[i];
@@ -545,12 +577,13 @@
           autoResizeTextarea(textarea);
         }
 
-        // تغییر دکمه‌ها
         const saveBtn = document.getElementById("saveMeetingBtn");
         const updateBtn = document.getElementById("updateMeetingBtn");
         if (saveBtn && updateBtn) {
           saveBtn.style.display = "none";
           updateBtn.style.display = "inline-block";
+        } else {
+          console.error('Save or update button not found');
         }
       } catch (e) {
         console.error('Error in editMeeting:', e);
@@ -565,49 +598,18 @@
           alert('هیچ صورت‌جلسه‌ای برای ویرایش انتخاب نشده است!');
           return;
         }
-        const meetings = JSON.parse(localStorage.getItem("meetings") || "[]") || [];
+        let meetings = [];
+        try {
+          meetings = JSON.parse(localStorage.getItem("meetings") || "[]") || [];
+        } catch (e) {
+          console.error('Error parsing localStorage:', e);
+          alert('خطا در دسترسی به ذخیره‌سازی محلی.');
+          return;
+        }
         const meetingDate = document.getElementById("meetingDate");
         const meetingTime = document.getElementById("meetingTime");
         const meetingNumber = document.getElementById("meetingNumber");
         const meetingLocation = document.getElementById("meetingLocation");
         const topic = document.getElementById("topic");
         const attendeesList = document.getElementById("attendeesList");
-        const entryRows = document.querySelectorAll(".entry-row");
-
-        if (!meetingDate || !meetingNumber || !topic || !attendeesList || !entryRows) {
-          console.error('One or more elements not found');
-          alert('خطا: برخی عناصر فرم یافت نشدند.');
-          return;
-        }
-
-        const updatedMeeting = {
-          id: editingMeetingId,
-          date: meetingDate.value,
-          time: meetingTime.value,
-          number: meetingNumber.value,
-          location: meetingLocation.value,
-          topic: topic.value,
-          attendees: [],
-          entries: []
-        };
-
-        // جمع‌آوری حاضرین
-        for (let i = 0; i < attendeesList.options.length; i++) {
-          if (attendeesList.options[i].selected) {
-            updatedMeeting.attendees.push(attendeesList.options[i].value);
-          }
-        }
-
-        // جمع‌آوری مصوبات
-        for (let i = 0; i < entryRows.length; i++) {
-          const row = entryRows[i];
-          const textarea = row.querySelector("textarea");
-          const responsible = row.querySelector(".entry-details input:nth-child(1)");
-          const deadline = row.querySelector(".entry-details input:nth-child(2)");
-          if (textarea && responsible && deadline) {
-            updatedMeeting.entries.push({
-              text: textarea.value,
-              responsible: responsible.value,
-              deadline: deadline.value
-            });
-        
+        const entryRows = document.querySelectorAll(".
