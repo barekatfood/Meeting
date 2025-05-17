@@ -8,12 +8,18 @@
 
   <style>
     :root {
-      --primary-color: #8BC34A; /* رنگ سبز کله‌غازی */
+      --primary-color: #00C4B4; /* آبی فیروزه‌ای (Canva) */
+      --secondary-color: #7B3FE4; /* بنفش (Canva) */
+      --accent-color: #FF6B9B; /* صورتی (Canva) */
       --font-family: 'Vazirmatn', sans-serif;
-      --background-color: #fff0f0;
-      --text-color: #2d004d;
+      --background-color: #F5F6F5; /* خاکستری خیلی روشن */
+      --text-color: #1F2A44; /* خاکستری تیره */
       --border-radius: 12px;
-      --font-size: 14px; /* اندازه فونت اصلی */
+      --font-size: 12px; /* فونت اصلی 12px */
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
@@ -58,7 +64,7 @@
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
       padding: 10px;
-      background-color: #f0f8e0;
+      background-color: rgba(123, 63, 228, 0.1); /* بنفش با شفافیت */
       flex-wrap: wrap;
     }
 
@@ -68,19 +74,30 @@
       padding: 8px;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
-      box-sizing: border-box;
+      font-size: var(--font-size);
       text-align: center;
     }
 
     .topic-section {
-      width: calc(100% - 20px); /* کمی کوچک‌تر */
-      margin: 10px 0; /* فاصله از بالا و پایین */
+      width: 100%;
+      margin: 10px 0;
       padding: 10px;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
-      text-align: center; /* متن در وسط */
-      height: 40px; /* ارتفاع ثابت */
-      font-size: 14px; /* اندازه متن */
+      text-align: center;
+      height: 60px;
+      font-size: var(--font-size);
+      resize: vertical;
+    }
+
+    .entry-row textarea {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid var(--primary-color);
+      border-radius: var(--border-radius);
+      min-height: 80px;
+      font-size: var(--font-size);
+      resize: vertical;
     }
 
     .attendees-section {
@@ -93,6 +110,8 @@
       flex: 1;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
+      font-size: var(--font-size);
+      padding: 8px;
     }
 
     .attendees-input, .primary-btn {
@@ -100,6 +119,7 @@
       padding: 8px;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
+      font-size: var(--font-size);
     }
 
     .entry-row {
@@ -119,6 +139,7 @@
       padding: 8px;
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
+      font-size: var(--font-size);
     }
 
     .action-buttons {
@@ -131,17 +152,26 @@
     .primary-btn {
       background: var(--primary-color);
       color: white;
+      border: none;
       border-radius: var(--border-radius);
       cursor: pointer;
+      padding: 8px 16px;
+      font-size: var(--font-size);
+      transition: background-color 0.3s;
+    }
+
+    .primary-btn:hover {
+      background: var(--accent-color); /* صورتی در hover */
     }
 
     .remove-btn {
-      background: red;
+      background: var(--secondary-color); /* بنفش */
       color: white;
       border: none;
       border-radius: var(--border-radius);
       cursor: pointer;
       padding: 5px 10px;
+      font-size: var(--font-size);
     }
 
     #selectedAttendees {
@@ -149,8 +179,9 @@
       border: 2px solid var(--primary-color);
       border-radius: var(--border-radius);
       padding: 10px;
-      font-size: 10px; /* تنظیم سایز فونت کوچکتر */
-      line-height: 1.2; /* تنظیم فاصله بین خطوط */
+      font-size: 10px; /* فونت 10px برای نام اعضای جلسه */
+      line-height: 1.2;
+      background-color: rgba(255, 107, 155, 0.1); /* صورتی با شفافیت */
     }
 
     .print-only {
@@ -177,9 +208,18 @@
         padding: 8px;
         margin: 0;
         text-align: center;
-        background-color: #f0f8e0;
+        background-color: rgba(123, 63, 228, 0.1);
         flex: 1;
-        font-size: 13px;
+        font-size: var(--font-size); /* 12px */
+      }
+      .topic-section, .entry-row textarea {
+        font-size: var(--font-size);
+        min-height: 60px;
+      }
+      #selectedAttendees {
+        font-size: 10px;
+        line-height: 1.2;
+        background-color: rgba(255, 107, 155, 0.1);
       }
     }
   </style>
@@ -236,7 +276,7 @@
       </div>
 
       <div id="selectedAttendees">
-        <h3>حاضرین در جلسه: <span id="selectedAttendeeList" style="font-size: 10px; line-height: 1.2;"></span></h3>
+        <h3>حاضرین در جلسه: <span id="selectedAttendeeList"></span></h3>
       </div>
 
       <div id="entries">
@@ -290,7 +330,7 @@
         </div>
       `;
       document.getElementById("entries").appendChild(entryDiv);
-      autoResizeTextarea(entryDiv.querySelector('textarea')); // تنظیم ارتفاع خودکار
+      autoResizeTextarea(entryDiv.querySelector('textarea'));
     }
 
     function removeEntry(button) {
@@ -303,6 +343,7 @@
       if (newName) {
         var option = document.createElement("option");
         option.text = newName;
+        option speculations = newName;
         document.getElementById("attendeesList").add(option);
         document.getElementById("newAttendee").value = "";
         updateSelectedAttendees();
@@ -315,20 +356,18 @@
       var selectedList = document.getElementById("attendeesList");
       var selectedAttendees = document.getElementById("selectedAttendeeList");
       var names = [];
-
       for (var i = 0; i < selectedList.options.length; i++) {
         if (selectedList.options[i].selected) {
           names.push(selectedList.options[i].value);
         }
       }
-
       selectedAttendees.textContent = names.join(', ');
     }
 
     function updatePrintLocation() {
       const location = document.getElementById("meetingLocation").value;
       const printLocationDiv = document.getElementById("printMeetingLocationField");
-      printLocationDiv.textContent = "📍 مکان جلسه: " + location;
+      printLocationDiv.textContent = location ? "📍 مکان جلسه: " + location : "";
     }
 
     document.getElementById("meetingLocation").addEventListener("change", updatePrintLocation);
@@ -338,14 +377,13 @@
     }
 
     function autoResizeTextarea(textarea) {
-      textarea.style.height = 'auto'; // ارتفاع را به طور موقت به خودکار تنظیم می‌کنیم
-      textarea.style.height = textarea.scrollHeight + 'px'; // ارتفاع را بر اساس محتوا تنظیم می‌کنیم
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
     }
 
-    // این تابع به تمام textarea ها اضافه می‌شود
     document.querySelectorAll('textarea').forEach(function(textarea) {
       textarea.addEventListener('input', function() {
-        autoResizeTextarea(textarea); // هر بار که کاربر چیزی تایپ می‌کند، تابع را فراخوانی می‌کنیم
+        autoResizeTextarea(textarea);
       });
     });
 
